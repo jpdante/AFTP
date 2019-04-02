@@ -1,27 +1,54 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
+using AFTPLib.Configuration;
+using AFTPLib.Managers;
+using AFTPLib.Net;
 
 namespace AFTPLib {
     public class AftpServer {
 
-        private Socket _socket;
-        private readonly int _backlog;
+        private readonly FSocket _fSocket;
+        private readonly ServerConfig _serverConfig;
+        private readonly UserManager _userManager;
+        private readonly FirewallManager _firewallManager;
+        private bool _isListening;
 
-        public AftpServer(EndPoint address, int backlog = 10) {
-            _socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            _socket.Bind(address);
-            _backlog = backlog;
+        public AftpServer(ServerConfig serverConfig) {
+            _serverConfig = serverConfig;
+            _fSocket = new FSocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _fSocket.Bind(_serverConfig.Address);
+            _userManager = new UserManager();
+            _firewallManager = new FirewallManager();
         }
 
-/// <summary>
-/// Start AFTP Server.
-/// </summary>
         public void Start() {
-            _socket.Listen(_backlog);
+            _isListening = true;
+            _fSocket.Listen(_serverConfig.BackLog);
+            _firewallManager.Start();
+            _fSocket.BeginAccept(EndAcceptSocket, null);
+        }
+
+        private void EndAcceptSocket(IAsyncResult ar) {
+            try {
+                Socket socket = _fSocket.EndAccept(ar);
+                int timeout = 0;
+                if (_firewallManager.AllowConnection(((IPEndPoint) socket.RemoteEndPoint).Address, out timeout)) {
+                    
+                } else {
+                    
+                }
+            } catch {
+                // ignored
+            }
+            if(_isListening) _fSocket.BeginAccept(EndAcceptSocket, null);
         }
 
         public void Stop() {
-            _socket.Disconnect(true);
+            _isListening = false;
+            _fSocket.Disconnect(true);
+            _firewallManager.Stop();
         }
     }
 }

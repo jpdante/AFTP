@@ -2,7 +2,8 @@ using ProtoBuf;
 
 namespace AFTPLib.Protocol.Commands {
     [ProtoContract]
-    public class FinishHandshake {
-        [ProtoMember(1)] public byte Command = 1;
+    public class FinishHandshake : ICommand {
+        [ProtoMember(1)]
+        public byte CommandId => 1;
     }
 }
