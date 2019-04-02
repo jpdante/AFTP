@@ -1,16 +1,19 @@
+using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace AFTPLib.Net
 {
-    public class FSocket {
+    public class FSocket : Socket {
+        public FSocket(AddressFamily addressFamily, SocketType socketType, ProtocolType protocolType) : base(addressFamily, socketType, protocolType) {
+        }
 
-        private Socket _socket;
+        public FSocket(SocketInformation socketInformation) : base(socketInformation) {
+        }
 
-        public FSocket() {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public FSocket(SocketType socketType, ProtocolType protocolType) : base(socketType, protocolType) {
         }
         
-        public bool IsConnected => !((_socket.Poll(1000, SelectMode.SelectRead) && (_socket.Available == 0)) || !_socket.Connected);
-
+        public bool IsConnected => !((this.Poll(1000, SelectMode.SelectRead) && (this.Available == 0)) || !this.Connected);
     }
 }
