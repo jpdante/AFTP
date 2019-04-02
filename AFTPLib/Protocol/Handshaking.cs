@@ -14,7 +14,7 @@ namespace AFTPLib.Protocol
         }
 
         public void Handshake() {
-
+            
         }
         
         public void HandshakeAsync() {

@@ -1,43 +1,53 @@
 ﻿using System;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AFTPLib.Exceptions;
+using AFTPLib.Net;
 
 namespace AFTPLib {
     public class AftpClient {
 
-        private Socket _socket;
+        private readonly FSocket _fSocket;
+        private SslStream _stream;
 
         public AftpClient() {
-            _socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            _fSocket = new FSocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
 
-        #region Connect
-
-        public void Connect(EndPoint endPoint) {
-            _socket.Connect(endPoint);
-            if (!IsConnected) throw new ConnectionFailedException(endPoint.ToString());
+        public void Connect(IPEndPoint ipEndPoint, string user, string password) {
+            _fSocket.Connect(ipEndPoint);
+            if (!_fSocket.IsConnected) throw new ConnectionFailedException(ipEndPoint.ToString());
+            _stream = new SslStream(new NetworkStream(_fSocket), false, 
+                new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+            _stream.AuthenticateAsClient(ipEndPoint.Address.ToString());  
+            
         }
 
-        public async Task ConnectAsync(EndPoint endPoint) {
-            await _socket.ConnectAsync(endPoint);
-            if (!IsConnected) throw new ConnectionFailedException(endPoint.ToString());
+        public async Task ConnectAsync(IPEndPoint ipEndPoint, string user, string password) {
+            await _fSocket.ConnectAsync(ipEndPoint);
+            if (!_fSocket.IsConnected) throw new ConnectionFailedException(ipEndPoint.ToString());
+            _stream = new SslStream(new NetworkStream(_fSocket), false, 
+                new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+            _stream.AuthenticateAsClient(ipEndPoint.Address.ToString());         
         }
 
-        #endregion
-        
-        #region Commands
-        
-        
-        
-        #endregion
+        public void Disconnect() {
+            
+        }
 
-        #region Helpers
+        public async Task DisconnectAsync() {
+            
+        }
+        
+        
 
-        public bool IsConnected => !((_socket.Poll(1000, SelectMode.SelectRead) && (_socket.Available == 0)) || !_socket.Connected);
-
-        #endregion
+        private static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain,
+            SslPolicyErrors sslPolicyErrors) {
+            return sslPolicyErrors == SslPolicyErrors.None;
+        }
 
     }
 }
