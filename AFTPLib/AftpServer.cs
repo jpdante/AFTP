@@ -1,31 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using AFTPLib.Configuration;
+using AFTPLib.Core;
 using AFTPLib.Managers;
 using AFTPLib.Net;
+using AFTPLib.Protocol;
 
 namespace AFTPLib {
     public class AftpServer {
 
+        public ServerConfig ServerConfig { get; set; }
+        internal List<ServerClient> ActiveClients { get; }
+
         private readonly FSocket _fSocket;
-        private readonly ServerConfig _serverConfig;
         private readonly UserManager _userManager;
         private readonly FirewallManager _firewallManager;
         private bool _isListening;
 
         public AftpServer(ServerConfig serverConfig) {
-            _serverConfig = serverConfig;
+            ServerConfig = serverConfig;
             _fSocket = new FSocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _fSocket.Bind(_serverConfig.Address);
+            _fSocket.Bind(ServerConfig.IpEndPoint);
             _userManager = new UserManager();
-            _firewallManager = new FirewallManager();
+            _firewallManager = new FirewallManager(ServerConfig);
+            ActiveClients = new List<ServerClient>();
         }
 
         public void Start() {
             _isListening = true;
-            _fSocket.Listen(_serverConfig.BackLog);
+            _fSocket.Listen(ServerConfig.BackLog);
             _firewallManager.Start();
             _fSocket.BeginAccept(EndAcceptSocket, null);
         }
@@ -33,11 +41,11 @@ namespace AFTPLib {
         private void EndAcceptSocket(IAsyncResult ar) {
             try {
                 Socket socket = _fSocket.EndAccept(ar);
-                int timeout = 0;
-                if (_firewallManager.AllowConnection(((IPEndPoint) socket.RemoteEndPoint).Address, out timeout)) {
-                    
+                if (_firewallManager.AllowConnection(((IPEndPoint) socket.RemoteEndPoint).Address)) {
+                    ServerClient serverClient = new ServerClient(socket, this);
+                    serverClient.Handshake();
                 } else {
-                    
+                    socket.Close();
                 }
             } catch {
                 // ignored

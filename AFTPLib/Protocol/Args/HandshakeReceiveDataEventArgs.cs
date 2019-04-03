@@ -3,20 +3,20 @@ using System;
 namespace AFTPLib.Protocol.Args {
     public class HandshakeReceiveDataEventArgs : EventArgs {
         public int Version { get; }
-        public byte SystemType { get; }
-        public string SystemName { get; }
+        public string Software { get; }
         public bool Cancel { get; set; }
         public HandshakeCancelReason CancelReason { get; set; }
 
-        public HandshakeReceiveDataEventArgs(int version = 0, byte systemType = 0, string systemName = null) {
+        public HandshakeReceiveDataEventArgs(bool cancel, HandshakeCancelReason cancelReason, int version = 0, string software = null) {
             Version = version;
-            SystemType = systemType;
-            SystemName = systemName;
+            Software = software;
+            Cancel = cancel;
+            CancelReason = cancelReason;
         }
         
     }
 
     public enum HandshakeCancelReason {
-        UnsupportedVersion, UnsupportedSystem, Unknown
+        UnsupportedVersion, UnsupportedSoftware, Unknown
     }
 }

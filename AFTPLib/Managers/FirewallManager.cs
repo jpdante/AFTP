@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Timers;
+using AFTPLib.Configuration;
 
 namespace AFTPLib.Managers {
     public class FirewallManager {
@@ -12,12 +13,15 @@ namespace AFTPLib.Managers {
         private readonly int _maxConnections;
         private readonly int _maxFailedAttempts;
         
-        public FirewallManager() {
+        public FirewallManager(ServerConfig serverConfig) {
             _blockedUsers = new Dictionary<IPAddress, BlockedUser>();
             _connectionHistory = new Dictionary<IPAddress, UserHistory>();
-            _timer = new Timer();
-            _timer.Interval = 1000;
+            _timer = new Timer {Interval = 1000};
             _timer.Elapsed += TimerOnElapsed;
+            _newHistoryTimeout = serverConfig.FirewallHistoryTimeout;
+            _newBlockedUserTimeout = serverConfig.FirewallBanTimeout;
+            _maxConnections = serverConfig.FirewallMaxConnections;
+            _maxFailedAttempts = serverConfig.FirewallMaxFailedAttempts;
         }
 
         public void Start() {
@@ -27,17 +31,22 @@ namespace AFTPLib.Managers {
         private void TimerOnElapsed(object sender, ElapsedEventArgs e) {
             foreach(BlockedUser blockedUser in _blockedUsers.Values) {
                 blockedUser.Timeout--;
-                if (blockedUser.Timeout <= 0) _blockedUsers.Remove(blockedUser.IPAddress);
+                if (blockedUser.Timeout <= 0) _blockedUsers.Remove(blockedUser.IpAddress);
             }
             
             foreach(UserHistory history in _connectionHistory.Values) {
                 history.Timeout--;
-                if (history.Timeout <= 0) _connectionHistory.Remove(history.IPAddress);
+                if (history.Timeout <= 0) _connectionHistory.Remove(history.IpAddress);
             }
         }
 
         public void Stop() {
             _timer.Stop();
+        }
+
+        public void Reset() {
+            _blockedUsers = new Dictionary<IPAddress, BlockedUser>();
+            _connectionHistory = new Dictionary<IPAddress, UserHistory>();
         }
 
         public void AddConnection(IPAddress ipAddress, bool failed) {
@@ -54,32 +63,27 @@ namespace AFTPLib.Managers {
             }
         }
 
-        public bool AllowConnection(IPAddress ipAddress, out int timeout) {
-            timeout = 0;
-            if (!_blockedUsers.ContainsKey(ipAddress)) return true;
-            timeout = _blockedUsers[ipAddress].Timeout;
-            return false;
-        }
+        public bool AllowConnection(IPAddress ipAddress) => !_blockedUsers.ContainsKey(ipAddress);
     }
 
     public class BlockedUser {
-        public IPAddress IPAddress { get; }
+        public IPAddress IpAddress { get; }
         public int Timeout { get; set; }
         
         public BlockedUser(IPAddress ipAddress, int timeout) {
-            IPAddress = ipAddress;
+            IpAddress = ipAddress;
             Timeout = timeout;
         }
     }
     
     public class UserHistory {
-        public IPAddress IPAddress { get; }
+        public IPAddress IpAddress { get; }
         public int Connections { get; set; }
         public int FailedAttempts { get; set; }
         public int Timeout { get; set; }
 
         public UserHistory(IPAddress ipAddress, int timeout) {
-            IPAddress = ipAddress;
+            IpAddress = ipAddress;
             Connections = 1;
             FailedAttempts = 0;
             Timeout = timeout;
