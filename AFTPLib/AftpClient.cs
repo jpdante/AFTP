@@ -25,9 +25,11 @@ namespace AFTPLib {
 
         public void Connect(string address, int port, string user, string password) {
             _fSocket.Connect(address, port);
+            Console.WriteLine("[Client] Socket connected!");
             if (!_fSocket.IsConnected) throw new ConnectionFailedException(address);
             _stream = new SslStream(new NetworkStream(_fSocket), false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
             _stream.AuthenticateAsClient(address);
+            Console.WriteLine("[Client] Ssl stream set.");
             _handshaking = new Handshaking(_stream, false,0,_clientConfig.Version, _clientConfig.Software);
             _handshaking.OnHandshakeReceiveData += OnHandshakeReceiveData;
             _handshaking.OnHandshakeFinish += (sender, args) => {
@@ -69,13 +71,17 @@ namespace AFTPLib {
         }
 
         private void OnHandshakeReceiveData(object sender, HandshakeReceiveDataEventArgs args) {
+            Console.WriteLine($"[Client] Version: {args.Version}");
+            Console.WriteLine($"[Client] Software: {args.Software}");
             if (args.Version <= _clientConfig.Version) return;
             args.Cancel = true;
             args.CancelReason = HandshakeCancelReason.UnsupportedVersion;
         }
 
         private void Authenticate(string user, string password) {
-
+            Console.WriteLine($"[Client] Authenticating...");
+            Authentication authentication = new Authentication(_stream, false);
+            authentication.StartAuthentication("usuario", "senha");
         }
 
     }
