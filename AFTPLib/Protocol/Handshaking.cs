@@ -69,7 +69,7 @@ namespace AFTPLib.Protocol
                             _handshakeProgress = 1;
                         } else {
                             _readStream = false;
-                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeErrorException()));
+                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException()));
                         }
                         break;
                     case 1:
@@ -79,7 +79,7 @@ namespace AFTPLib.Protocol
                             OnHandshakeReceiveData(this, eventArgs);
                             if (eventArgs.Cancel) {
                                 _readStream = false;
-                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeCanceledException(eventArgs.CancelReason)));
+                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new RandomCommandException(eventArgs.CancelReason)));
                                 break;
                             }
                             SendCommand(new GetVersion(_version, _software));
@@ -90,14 +90,14 @@ namespace AFTPLib.Protocol
                             OnHandshakeReceiveData(this, eventArgs);
                             if (eventArgs.Cancel) {
                                 _readStream = false;
-                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeCanceledException(eventArgs.CancelReason)));
+                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new RandomCommandException(eventArgs.CancelReason)));
                                 break;
                             }
                             SendCommand(new FinishHandshake());
                             _handshakeProgress = 2;
                         } else {
                             _readStream = false;
-                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeErrorException()));
+                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException()));
                         }
                         break;
                     case 2:
@@ -110,12 +110,12 @@ namespace AFTPLib.Protocol
                             OnHandshakeFinish(this, new HandshakeFinishEventArgs(true, null));
                         } else {
                             _readStream = false;
-                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeErrorException()));
+                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException()));
                         }
                         break;
                     default:
                         _readStream = false;
-                        OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeErrorException()));
+                        OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException()));
                         break;
                 }
             }

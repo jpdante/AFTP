@@ -9,8 +9,11 @@ namespace AFTP.Testing {
         public static void Main(string[] args) {
             Console.WriteLine("Starting...");
             AftpServer aftpServer = new AftpServer(new ServerConfig() {
-                //ServerCertificate = new X509Certificate2(@"C:\Users\jpdante\Desktop\cert.pfx", "12345"),
+#if (WINDOWS)
+                ServerCertificate = new X509Certificate2(@"C:\Users\jpdante\Desktop\cert.pfx", "12345"),
+#elif (LINUX)
                 ServerCertificate = new X509Certificate2(@"/home/jpdante/Desktop/cert.pfx", "12345"),
+#endif
                 IpEndPoint = new IPEndPoint(IPAddress.Any, 49535),
                 BackLog = 10,
                 FirewallMaxConnections = 10,
