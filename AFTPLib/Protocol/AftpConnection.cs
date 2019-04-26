@@ -47,7 +47,7 @@ namespace AFTPLib.Protocol {
         }
 
         public void Handshake() {
-            Task.Factory.StartNew(StreamReader);
+            //Task.Factory.StartNew(StreamReader);
             if (_isServer) ServerHandshake();
             else ClientHandshake();
         }
@@ -59,7 +59,7 @@ namespace AFTPLib.Protocol {
          * 4: FinishEncryption
          * 5: FinishHandshake
          */
-        private void StreamReader() {
+        /*private void StreamReader() {
             _continueReadStream = true;
             while (_stream.CanRead && _continueReadStream) {
                 var protoStream = ReadStream();
@@ -101,14 +101,14 @@ namespace AFTPLib.Protocol {
                         break;
                     case 4:
                         if (_isServer && _initializationStatus == 1) {
-                            /*if (_settings.UseEncryption) {
+                            if (_settings.UseEncryption) {
                                 Serializer.SerializeWithLengthPrefix(_stream, new RequestEncryption(_settings.EncryptionType, _settings.CertificateSelfSigned, null), PrefixStyle.Fixed32);
                                 _initializationStatus = 2;
                                 _stream = OnRequestSecureStream(this, _stream, false);
                             } else {
                                 Serializer.SerializeWithLengthPrefix(_stream, new FinishHandshake(), PrefixStyle.Fixed32);
                                 _initializationStatus = 3;
-                            }*/
+                            }
                         } else if (_initializationStatus == 1) {
                             _stream = OnRequestSecureStream(this, _stream, _settings.CertificateSelfSigned);
                             Serializer.SerializeWithLengthPrefix(_stream, new GetVersion(_settings.SentVersion, _settings.SentSoftware), PrefixStyle.Fixed32);
@@ -138,7 +138,7 @@ namespace AFTPLib.Protocol {
                         break;
                 }
             }
-        }
+        }*/
 
         private void HardShutdown(EndConnectionReason reason, Exception error) {
             _continueReadStream = false;
@@ -150,16 +150,16 @@ namespace AFTPLib.Protocol {
         }
 
         private void ServerHandshake() {
-            /*ReadStream<StartHandshake>();
+            ReadStream<StartHandshake>();
             Serializer.SerializeWithLengthPrefix(_stream, new StartHandshake(), PrefixStyle.Fixed32);
             var version = ReadStream<GetVersion>();
             _info.Version = version.Version;
             _info.Software = version.Software;
-            Serializer.SerializeWithLengthPrefix(_stream, new GetVersion(_settings.SentVersion, _settings.SentSoftware), PrefixStyle.Fixed32);*/
+            Serializer.SerializeWithLengthPrefix(_stream, new GetVersion(_settings.SentVersion, _settings.SentSoftware), PrefixStyle.Fixed32);
         }
 
         private void ClientHandshake() {
-            /*Serializer.SerializeWithLengthPrefix(_stream, new StartHandshake(), PrefixStyle.Fixed32);
+            Serializer.SerializeWithLengthPrefix(_stream, new StartHandshake(), PrefixStyle.Fixed32);
             ReadStream<StartHandshake>();
             Serializer.SerializeWithLengthPrefix(_stream, new GetVersion(_settings.SentVersion, _settings.SentSoftware), PrefixStyle.Fixed32);
             var version = ReadStream<GetVersion>();
@@ -169,7 +169,7 @@ namespace AFTPLib.Protocol {
             OnCheckVersion(this, checkVersionArgs);
             if (checkVersionArgs.Cancel) {
                 Serializer.SerializeWithLengthPrefix(_stream, new EndConnection(), PrefixStyle.Fixed32);
-            }*/
+            }
         }
         
         private ProtoStream ReadStream() {
@@ -181,7 +181,7 @@ namespace AFTPLib.Protocol {
             }
         }
         
-        /*private T ReadStream<T>() where T : ProtoStream {
+        private T ReadStream<T>() where T : ProtoStream {
             try {
                 if (!_stream.CanRead) throw new StreamNotReadableException();
                 var data = Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);
@@ -193,7 +193,7 @@ namespace AFTPLib.Protocol {
             } catch {
                 throw new StreamDecodeException();
             }
-        }*/
+        }
         
         public void Authenticate(string user, string password) {
             if (_isServer) return;
