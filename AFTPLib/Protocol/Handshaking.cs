@@ -74,7 +74,7 @@ namespace AFTPLib.Protocol
                         break;
                     case 1:
                         if (_handshakeProgress == 1 && !_isServer) {
-                            GetVersion getVersion = (GetVersion) command;
+                            var getVersion = (GetVersion) command;
                             var eventArgs = new HandshakeReceiveDataEventArgs(false, HandshakeCancelReason.Unknown, getVersion.Version, getVersion.Software);
                             OnHandshakeReceiveData(this, eventArgs);
                             if (eventArgs.Cancel) {
@@ -85,7 +85,7 @@ namespace AFTPLib.Protocol
                             SendCommand(new GetVersion(_version, _software));
                             _handshakeProgress = 2;
                         } else if (_handshakeProgress == 1 && _isServer) {
-                            GetVersion getVersion = (GetVersion)command;
+                            var getVersion = (GetVersion)command;
                             var eventArgs = new HandshakeReceiveDataEventArgs(false, HandshakeCancelReason.Unknown, getVersion.Version, getVersion.Software);
                             OnHandshakeReceiveData(this, eventArgs);
                             if (eventArgs.Cancel) {

@@ -27,7 +27,7 @@ namespace AFTPLib.Protocol {
             _settings = settings;
             _info = new ConnectionInfo();
             if (!_isServer) return;
-            _defaultTimeout = _defaultTimeout;
+            _defaultTimeout = timeout;
         }
 
         public void Handshake() {
@@ -62,7 +62,7 @@ namespace AFTPLib.Protocol {
             try {
                 if (!_stream.CanRead) throw new StreamNotReadableException();
                 return Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);
-            } catch(Exception ex) {
+            } catch {
                 throw new StreamDecodeException();
             }
         }

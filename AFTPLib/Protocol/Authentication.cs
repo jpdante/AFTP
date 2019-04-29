@@ -15,8 +15,8 @@ namespace AFTPLib.Protocol
 
         private byte[] _buffer;
 
-        //public delegate void HandshakeFinishHandler(object sender, HandshakeFinishEventArgs args);
-        //public HandshakeFinishHandler OnHandshakeFinish;
+        public delegate void CheckAuthenticationHandler(object sender, HandshakeFinishEventArgs args);
+        public CheckAuthenticationHandler OnCheckAuthentication;
 
         public Authentication(Stream stream, bool isServer) {
             _stream = stream;
@@ -29,7 +29,7 @@ namespace AFTPLib.Protocol
             //_readStream = true;
             //Task.Factory.StartNew(ReadLoop);
             if (_isServer) {
-                ProtoStream command = Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);
+                var command = Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);
                 Console.WriteLine(command.ToString());
             } else {
                 SendCommand(new UserAuthentication(user, password));
@@ -38,8 +38,8 @@ namespace AFTPLib.Protocol
             //SendCommand(new StartHandshake());
         }
 
-        public void SendCommand(ProtoStream protoStream) => Serializer.SerializeWithLengthPrefix(_stream, protoStream, PrefixStyle.Fixed32);
-
+        private void SendCommand(ProtoStream protoStream) => Serializer.SerializeWithLengthPrefix(_stream, protoStream, PrefixStyle.Fixed32);
+        
         /*private void ReadLoop() {
             while (_readStream && _stream.CanRead) {
                 ProtoStream command = Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);

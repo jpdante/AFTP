@@ -80,7 +80,7 @@ namespace AFTPLib {
 
         private void Authenticate(string user, string password) {
             Console.WriteLine($"[Client] Authenticating...");
-            Authentication authentication = new Authentication(_stream, false);
+            var authentication = new Authentication(_stream, false);
             authentication.StartAuthentication("usuario", "senha");
         }
 
