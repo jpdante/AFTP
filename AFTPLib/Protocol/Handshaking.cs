@@ -15,6 +15,7 @@ namespace AFTPLib.Protocol
         private readonly string _software;
         private readonly System.Timers.Timer _timer;
         private readonly bool _isServer;
+        private readonly ConnectionSettings _connectionSettings;
 
         private byte[] _buffer;
         private bool _readStream;
@@ -58,7 +59,7 @@ namespace AFTPLib.Protocol
 
         private void ReadLoop() {
             while (_readStream && _stream.CanRead) {
-                ProtoStream command = Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);
+                var command = Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);
                 switch (command.CommandId) {
                     case 0:
                         if (_handshakeProgress == 0 && !_isServer) {
@@ -69,7 +70,7 @@ namespace AFTPLib.Protocol
                             _handshakeProgress = 1;
                         } else {
                             _readStream = false;
-                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException()));
+                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException(command.CommandId)));
                         }
                         break;
                     case 1:
@@ -79,7 +80,7 @@ namespace AFTPLib.Protocol
                             OnHandshakeReceiveData(this, eventArgs);
                             if (eventArgs.Cancel) {
                                 _readStream = false;
-                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new RandomCommandException(eventArgs.CancelReason)));
+                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeErrorException()));
                                 break;
                             }
                             SendCommand(new GetVersion(_version, _software));
@@ -90,14 +91,62 @@ namespace AFTPLib.Protocol
                             OnHandshakeReceiveData(this, eventArgs);
                             if (eventArgs.Cancel) {
                                 _readStream = false;
-                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new RandomCommandException(eventArgs.CancelReason)));
+                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeErrorException()));
                                 break;
                             }
                             SendCommand(new FinishHandshake());
                             _handshakeProgress = 2;
                         } else {
                             _readStream = false;
-                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException()));
+                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException(command.CommandId)));
+                        }
+                        break;
+                }
+            }
+        }
+
+        /*private void ReadLoop() {
+            while (_readStream && _stream.CanRead) {
+                var command = Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);
+                switch (command.CommandId) {
+                    case 0:
+                        if (_handshakeProgress == 0 && !_isServer) {
+                            SendCommand(new StartHandshake());
+                            _handshakeProgress = 1;
+                        } else if (_handshakeProgress == 0 && _isServer) {
+                            SendCommand(new GetVersion(_version, _software));
+                            _handshakeProgress = 1;
+                        } else {
+                            _readStream = false;
+                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException(command.CommandId)));
+                        }
+                        break;
+                    case 1:
+                        if (_handshakeProgress == 1 && !_isServer) {
+                            var getVersion = (GetVersion) command;
+                            var eventArgs = new HandshakeReceiveDataEventArgs(false, HandshakeCancelReason.Unknown, getVersion.Version, getVersion.Software);
+                            OnHandshakeReceiveData(this, eventArgs);
+                            if (eventArgs.Cancel) {
+                                _readStream = false;
+                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeErrorException()));
+                                break;
+                            }
+                            SendCommand(new GetVersion(_version, _software));
+                            _handshakeProgress = 2;
+                        } else if (_handshakeProgress == 1 && _isServer) {
+                            var getVersion = (GetVersion)command;
+                            var eventArgs = new HandshakeReceiveDataEventArgs(false, HandshakeCancelReason.Unknown, getVersion.Version, getVersion.Software);
+                            OnHandshakeReceiveData(this, eventArgs);
+                            if (eventArgs.Cancel) {
+                                _readStream = false;
+                                OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new HandshakeErrorException()));
+                                break;
+                            }
+                            SendCommand(new FinishHandshake());
+                            _handshakeProgress = 2;
+                        } else {
+                            _readStream = false;
+                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException(command.CommandId)));
                         }
                         break;
                     case 2:
@@ -110,15 +159,15 @@ namespace AFTPLib.Protocol
                             OnHandshakeFinish(this, new HandshakeFinishEventArgs(true, null));
                         } else {
                             _readStream = false;
-                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException()));
+                            OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException(command.CommandId)));
                         }
                         break;
                     default:
                         _readStream = false;
-                        OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException()));
+                        OnHandshakeFinish(this, new HandshakeFinishEventArgs(false, new UnknownCommandException(command.CommandId)));
                         break;
                 }
             }
-        }
+        }*/
     }
 }

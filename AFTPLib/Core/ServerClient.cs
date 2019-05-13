@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
@@ -10,36 +11,53 @@ namespace AFTPLib.Core {
 
         private readonly Socket _clientSocket;
         private readonly AftpServer _aftpServer;
-        private SslStream _sslStream;
+        private Stream _stream;
+        private AftpConnection _aftpConnection;
 
         public ServerClient(Socket socket, AftpServer aftpServer) {
             _clientSocket = socket;
             _aftpServer = aftpServer;
         }
 
-        public void Handshake() {
-            _sslStream = new SslStream(new NetworkStream(_clientSocket), false);
-            _sslStream.AuthenticateAsServer(_aftpServer.ServerConfig.ServerCertificate, false, SslProtocols.Default, true);
-            Handshaking handshaking = new Handshaking(_sslStream, true, _aftpServer.ServerConfig.HandshakeTimeout, _aftpServer.ServerConfig.Version, _aftpServer.ServerConfig.Software);
-            handshaking.OnHandshakeReceiveData += OnHandshakeReceiveData;
-            handshaking.OnHandshakeFinish += OnHandshakeFinish;
-            handshaking.StartHandshake();
+        public void Start() {
+            _stream = new NetworkStream(_clientSocket);
+            _aftpConnection = new AftpConnection(_stream, new ConnectionSettings() {
+                SentVersion = 1,
+                UseEncryption = false
+            }, true, _aftpServer.ServerConfig.HandshakeTimeout);
+            _aftpConnection.OnCheckVersion += OnCheckVersion;
+            _aftpConnection.OnErrorOccurs += OnErrorOccurs;
+            _aftpConnection.OnRequestSecureStream += OnRequestSecureStream;
+            _aftpConnection.OnHandshakeFinish += OnHandshakeFinish;
+            _aftpConnection.OnAuthenticationRequest += OnAuthenticationRequest;
+            _aftpConnection.Handshake();
         }
 
-        private void OnHandshakeReceiveData(object sender, HandshakeReceiveDataEventArgs args) {
-            Console.WriteLine($"[Server] Version: {args.Version}");
-            Console.WriteLine($"[Server] Software: {args.Software}");
+        private void OnAuthenticationRequest(object sender, AuthenticationRequestEventArgs args) {
+            Console.WriteLine($"[Server] Received authentication request: {args.User} {args.Password} {args.PasswordEncryptionType}");
+            args.Success = true;
+        }
+
+        private void OnHandshakeFinish(object sender) {
+            Console.WriteLine("[Server] Handshake Finished!");
+        }
+
+        private Stream OnRequestSecureStream(object sender, Stream stream, bool selfSigned) {
+            var sslStream = new SslStream(_stream, false);
+            sslStream.AuthenticateAsServer(_aftpServer.ServerConfig.ServerCertificate, false, SslProtocols.Default, true);
+            return sslStream;
+        }
+
+        private static void OnErrorOccurs(object sender, Exception ex) {
+            throw ex;
+        }
+
+        private void OnCheckVersion(object sender, CheckVersionEventArgs args) {
+            Console.WriteLine($"[Server] Client Version: {args.Version}");
+            Console.WriteLine($"[Server] Client Software: {args.Software}");
             if (args.Version <= _aftpServer.ServerConfig.Version) return;
             args.Cancel = true;
             args.CancelReason = HandshakeCancelReason.UnsupportedVersion;
-        }
-
-        private void OnHandshakeFinish(object sender, HandshakeFinishEventArgs args) {
-            if (args.Success) {
-                _aftpServer.ActiveClients.Add(this);
-                Authentication authentication = new Authentication(_sslStream, true);
-                authentication.StartAuthentication();
-            } else throw args.Exception;
         }
     }
 }

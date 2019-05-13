@@ -6,8 +6,22 @@ namespace AFTPLib.Protocol {
         public int SentVersion;
         public string SentSoftware = "AFTPLib";
         public bool UseEncryption = true;
-        public EncryptionType EncryptionType = EncryptionType.Ssl;
+        public ConnectionEncryptionType ConnectionEncryptionType = ConnectionEncryptionType.Ssl;
+        public PasswordEncryptionType PasswordEncryptionType = PasswordEncryptionType.Sha256;
         public bool CertificateSelfSigned = false;
 
+    }
+
+    public enum ConnectionEncryptionType : byte {
+        Ssl = 0,
+    }
+
+    public enum PasswordEncryptionType {
+        PlainText,
+        Md5,
+        Sha1,
+        Sha256,
+        Sha384,
+        Sha512
     }
 }

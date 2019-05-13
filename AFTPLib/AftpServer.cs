@@ -40,10 +40,10 @@ namespace AFTPLib {
 
         private void EndAcceptSocket(IAsyncResult ar) {
             try {
-                Socket socket = _fSocket.EndAccept(ar);
+                var socket = _fSocket.EndAccept(ar);
                 if (_firewallManager.AllowConnection(((IPEndPoint) socket.RemoteEndPoint).Address)) {
-                    ServerClient serverClient = new ServerClient(socket, this);
-                    serverClient.Handshake();
+                    var serverClient = new ServerClient(socket, this);
+                    serverClient.Start();
                 } else {
                     socket.Close();
                 }

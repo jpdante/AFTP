@@ -8,11 +8,11 @@ namespace AFTP.Testing {
     public class Program {
         public static void Main(string[] args) {
             Console.WriteLine("Starting...");
-            AftpServer aftpServer = new AftpServer(new ServerConfig() {
-#if (WINDOWS)
-                ServerCertificate = new X509Certificate2(@"C:\Users\jpdante\Desktop\cert.pfx", "12345"),
-#elif (LINUX)
+            var aftpServer = new AftpServer(new ServerConfig() {
+#if (LINUX)
                 ServerCertificate = new X509Certificate2(@"/home/jpdante/Desktop/cert.pfx", "12345"),
+#else
+                ServerCertificate = new X509Certificate2(@"C:\Users\jpdante\Desktop\cert.pfx", "12345"),
 #endif
                 IpEndPoint = new IPEndPoint(IPAddress.Any, 49535),
                 BackLog = 10,
@@ -23,7 +23,7 @@ namespace AFTP.Testing {
             });
             aftpServer.Start();
             Console.WriteLine("AFTP Server started!");
-            AftpClient aftpClient = new AftpClient(new ClientConfig() {
+            var aftpClient = new AftpClient(new ClientConfig() {
                 DisableCertificateCheck = true
             });
             Console.WriteLine("Connecting to 'localhost:49535'...");

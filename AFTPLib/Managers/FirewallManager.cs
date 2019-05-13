@@ -29,12 +29,12 @@ namespace AFTPLib.Managers {
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs e) {
-            foreach(BlockedUser blockedUser in _blockedUsers.Values) {
+            foreach(var blockedUser in _blockedUsers.Values) {
                 blockedUser.Timeout--;
                 if (blockedUser.Timeout <= 0) _blockedUsers.Remove(blockedUser.IpAddress);
             }
             
-            foreach(UserHistory history in _connectionHistory.Values) {
+            foreach(var history in _connectionHistory.Values) {
                 history.Timeout--;
                 if (history.Timeout <= 0) _connectionHistory.Remove(history.IpAddress);
             }

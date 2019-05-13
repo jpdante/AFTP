@@ -21,7 +21,9 @@ namespace AFTPLib.Protocol.Commands {
     }
 
     public enum ConnectionSettings : byte {
-        SetEncryption = 0,
-
+        UseEncryption = 0,
+        EncryptionType = 1,
+        SelfSignedCertificate = 2,
+        PasswordEncryptionType = 3
     }
 }

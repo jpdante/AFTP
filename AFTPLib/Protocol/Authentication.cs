@@ -32,7 +32,7 @@ namespace AFTPLib.Protocol
                 var command = Serializer.DeserializeWithLengthPrefix<ProtoStream>(_stream, PrefixStyle.Fixed32);
                 Console.WriteLine(command.ToString());
             } else {
-                SendCommand(new UserAuthentication(user, password));
+                SendCommand(new RequestAuthentication(user, password));
             }
 
             //SendCommand(new StartHandshake());
