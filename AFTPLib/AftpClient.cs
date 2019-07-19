@@ -10,6 +10,8 @@ using AFTPLib.Exceptions;
 using AFTPLib.Net;
 using AFTPLib.Protocol;
 using AFTPLib.Protocol.Args;
+using AFTPLib.Protocol.Commands.List;
+using AFTPLib.Protocol.Commands.Models;
 
 namespace AFTPLib {
     public class AftpClient {
@@ -76,6 +78,19 @@ namespace AFTPLib {
             if (args.Version <= _clientConfig.Version) return;
             args.Cancel = true;
             args.CancelReason = HandshakeCancelReason.UnsupportedVersion;
+        }
+
+        public async Task<DirectoryListResponse> GetDirectoryList(string directory) {
+            var id = Guid.NewGuid().ToString();
+            _aftpConnection.SendCommand(new RequestDirectoryList(directory, id));
+            while (true) {
+                foreach (var item in _aftpConnection.AsyncResponseBuffer) {
+                    if (item.CommandId == 9 && ((DirectoryListResponse)item).Guid.Equals(id)) {
+                        return item as DirectoryListResponse;
+                    }
+                }
+                await Task.Delay(10);
+            }
         }
 
         /*private readonly FSocket _fSocket;

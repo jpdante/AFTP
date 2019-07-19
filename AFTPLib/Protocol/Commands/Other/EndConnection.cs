@@ -1,6 +1,6 @@
 using ProtoBuf;
 
-namespace AFTPLib.Protocol.Commands {
+namespace AFTPLib.Protocol.Commands.Other {
     [ProtoContract]
     public class EndConnection : ProtoStream {
         

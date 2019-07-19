@@ -1,11 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
 using AFTPLib.Exceptions;
 using AFTPLib.Protocol.Args;
 using AFTPLib.Protocol.Commands;
+using AFTPLib.Protocol.Commands.Handshake;
+using AFTPLib.Protocol.Commands.List;
+using AFTPLib.Protocol.Commands.Models;
+using AFTPLib.Protocol.Commands.Other;
 using ProtoBuf;
 
 namespace AFTPLib.Protocol {
@@ -21,6 +27,7 @@ namespace AFTPLib.Protocol {
         private bool _continueReadStream;
         private int _initializationStatus;
         private int _timeout;
+        public readonly List<ProtoStream> AsyncResponseBuffer;
 
         #region Events
 
@@ -49,6 +56,7 @@ namespace AFTPLib.Protocol {
             _isServer = isServer;
             _settings = settings;
             _info = new ConnectionInfo();
+            AsyncResponseBuffer = new List<ProtoStream>();
             if (!_isServer) return;
             _defaultTimeout = timeout;
             _isAuthenticated = false;
@@ -75,6 +83,11 @@ namespace AFTPLib.Protocol {
                 _timer.Start();
                 ServerHandshake();
             } else ClientHandshake();
+        }
+
+        public void SendCommand(ProtoStream command) {
+            Console.WriteLine("Sending 8");
+            Serializer.SerializeWithLengthPrefix(_stream, command, PrefixStyle.Fixed32);
         }
 
         private void HardShutdown(EndConnectionReason reason, Exception error) {
@@ -111,10 +124,10 @@ namespace AFTPLib.Protocol {
             }
             _initializationStatus = 1;
             Serializer.SerializeWithLengthPrefix(_stream, new GetVersion(_settings.SentVersion, _settings.SentSoftware), PrefixStyle.Fixed32);
-            Serializer.SerializeWithLengthPrefix(_stream, new SetSetting(Commands.ConnectionSettings.UseEncryption, _settings.UseEncryption.ToString()), PrefixStyle.Fixed32);
-            Serializer.SerializeWithLengthPrefix(_stream, new SetSetting(Commands.ConnectionSettings.EncryptionType, _settings.ConnectionEncryptionType.ToString()), PrefixStyle.Fixed32);
-            Serializer.SerializeWithLengthPrefix(_stream, new SetSetting(Commands.ConnectionSettings.SelfSignedCertificate, _settings.CertificateSelfSigned.ToString()), PrefixStyle.Fixed32);
-            Serializer.SerializeWithLengthPrefix(_stream, new SetSetting(Commands.ConnectionSettings.PasswordEncryptionType, _settings.PasswordEncryptionType.ToString()), PrefixStyle.Fixed32);
+            Serializer.SerializeWithLengthPrefix(_stream, new SetSetting(Commands.Other.ConnectionSettings.UseEncryption, _settings.UseEncryption.ToString()), PrefixStyle.Fixed32);
+            Serializer.SerializeWithLengthPrefix(_stream, new SetSetting(Commands.Other.ConnectionSettings.EncryptionType, _settings.ConnectionEncryptionType.ToString()), PrefixStyle.Fixed32);
+            Serializer.SerializeWithLengthPrefix(_stream, new SetSetting(Commands.Other.ConnectionSettings.SelfSignedCertificate, _settings.CertificateSelfSigned.ToString()), PrefixStyle.Fixed32);
+            Serializer.SerializeWithLengthPrefix(_stream, new SetSetting(Commands.Other.ConnectionSettings.PasswordEncryptionType, _settings.PasswordEncryptionType.ToString()), PrefixStyle.Fixed32);
             if (_settings.UseEncryption) {
                 Serializer.SerializeWithLengthPrefix(_stream, new RequestEncryption(), PrefixStyle.Fixed32);
                 _stream = OnRequestSecureStream(this, _stream, _settings.CertificateSelfSigned);
@@ -125,6 +138,7 @@ namespace AFTPLib.Protocol {
             _continueReadStream = true;
             while (_stream.CanRead && _continueReadStream) {
                 var protoStream = ReadStream();
+                Console.WriteLine(protoStream.CommandId);
                 switch (protoStream.CommandId) {
                     case 2:
                         var setSetting = (SetSetting)protoStream;
@@ -157,6 +171,10 @@ namespace AFTPLib.Protocol {
                             OnAuthenticationRequest(this, authenticationRequest);
                             Serializer.SerializeWithLengthPrefix(_stream, new AuthenticationResponse(authenticationRequest.Success), PrefixStyle.Fixed32);
                             _isAuthenticated = authenticationRequest.Success;
+                            if (_isAuthenticated) {
+                                Task.Factory.StartNew(ConnectionLoop);
+                                return;
+                            }
                         } else {
                             HardShutdown(EndConnectionReason.Unknown, new RandomCommandException());
                         }
@@ -189,16 +207,16 @@ namespace AFTPLib.Protocol {
                         var setSetting = (SetSetting)protoStream;
                         if (_initializationStatus == 1) {
                             switch (setSetting.Setting) {
-                                case (byte)Commands.ConnectionSettings.UseEncryption:
+                                case (byte)Commands.Other.ConnectionSettings.UseEncryption:
                                     _settings.UseEncryption = bool.Parse(setSetting.Value);
                                     break;
-                                case (byte)Commands.ConnectionSettings.EncryptionType:
+                                case (byte)Commands.Other.ConnectionSettings.EncryptionType:
                                     ConnectionEncryptionType.TryParse(setSetting.Value, true, out _settings.ConnectionEncryptionType);
                                     break;
-                                case (byte)Commands.ConnectionSettings.SelfSignedCertificate:
+                                case (byte)Commands.Other.ConnectionSettings.SelfSignedCertificate:
                                     _settings.CertificateSelfSigned = bool.Parse(setSetting.Value);
                                     break;
-                                case (byte)Commands.ConnectionSettings.PasswordEncryptionType:
+                                case (byte)Commands.Other.ConnectionSettings.PasswordEncryptionType:
                                     PasswordEncryptionType.TryParse(setSetting.Value, true, out _settings.PasswordEncryptionType);
                                     break;
                             }
@@ -227,12 +245,45 @@ namespace AFTPLib.Protocol {
                         if (_initializationStatus == 3) {
                             var authenticationResponse = (AuthenticationResponse)protoStream;
                             OnAuthenticationResult(this, new AuthenticationResponseEventArgs(authenticationResponse.Success));
+                            _continueReadStream = true;
+                            Task.Factory.StartNew(ConnectionLoop);
+                            return;
                         } else {
                             HardShutdown(EndConnectionReason.Unknown, new RandomCommandException());
                         }
                         break;
                     default:
                         HardShutdown(EndConnectionReason.InvalidCommand, new UnknownCommandException(protoStream.CommandId));
+                        break;
+                }
+            }
+        }
+
+        public void ConnectionLoop() {
+            Console.WriteLine("Continue :");
+            _continueReadStream = true;
+            while (_stream.CanRead && _continueReadStream) {
+                var protoStream = ReadStream();
+                Console.WriteLine("> " + protoStream.CommandId);
+                switch (protoStream.CommandId) {
+                    case 8:
+                        if (!_isServer) {
+                            HardShutdown(EndConnectionReason.InvalidCommand, new UnknownCommandException(protoStream.CommandId));
+                            break;
+                        }
+                        var request = (RequestDirectoryList)protoStream;
+                        var dir = new DirectoryInfo(request.Directory);
+                        var entries = new List<DirectoryEntry>();
+                        try { entries.AddRange(dir.GetFiles("*").Select(fileInfo => new DirectoryEntry(fileInfo.FullName, true, fileInfo.Length, 0, 777, "Unknown"))); } catch { }
+                        entries.AddRange(dir.GetDirectories().Select(directoryInfo => new DirectoryEntry(directoryInfo.FullName, false, -1, 0, 0, "Unknown")));
+                        Serializer.SerializeWithLengthPrefix(_stream, new DirectoryListResponse(true, null, entries.ToArray(), request.Guid), PrefixStyle.Fixed32);
+                        break;
+                    case 9:
+                        if (_isServer) {
+                            HardShutdown(EndConnectionReason.InvalidCommand, new UnknownCommandException(protoStream.CommandId));
+                            break;
+                        }
+                        AsyncResponseBuffer.Add(protoStream);
                         break;
                 }
             }

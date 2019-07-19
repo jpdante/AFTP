@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ProtoBuf;
+﻿using ProtoBuf;
 
-namespace AFTPLib.Protocol.Commands {
+namespace AFTPLib.Protocol.Commands.Other {
     [ProtoContract]
     public class GetVersion : ProtoStream {
 
