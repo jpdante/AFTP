@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Timers;
 using AFTPLib.Exceptions;
@@ -211,13 +213,13 @@ namespace AFTPLib.Protocol {
                                     _settings.UseEncryption = bool.Parse(setSetting.Value);
                                     break;
                                 case (byte)Commands.Other.ConnectionSettings.EncryptionType:
-                                    ConnectionEncryptionType.TryParse(setSetting.Value, true, out _settings.ConnectionEncryptionType);
+                                    Enum.TryParse(setSetting.Value, true, out _settings.ConnectionEncryptionType);
                                     break;
                                 case (byte)Commands.Other.ConnectionSettings.SelfSignedCertificate:
                                     _settings.CertificateSelfSigned = bool.Parse(setSetting.Value);
                                     break;
                                 case (byte)Commands.Other.ConnectionSettings.PasswordEncryptionType:
-                                    PasswordEncryptionType.TryParse(setSetting.Value, true, out _settings.PasswordEncryptionType);
+                                    Enum.TryParse(setSetting.Value, true, out _settings.PasswordEncryptionType);
                                     break;
                             }
                         } else {
@@ -274,9 +276,65 @@ namespace AFTPLib.Protocol {
                         var request = (RequestDirectoryList)protoStream;
                         var dir = new DirectoryInfo(request.Directory);
                         var entries = new List<DirectoryEntry>();
-                        try { entries.AddRange(dir.GetFiles("*").Select(fileInfo => new DirectoryEntry(fileInfo.FullName, true, fileInfo.Length, 0, 777, "Unknown"))); } catch { }
-                        entries.AddRange(dir.GetDirectories().Select(directoryInfo => new DirectoryEntry(directoryInfo.FullName, false, -1, 0, 0, "Unknown")));
-                        Serializer.SerializeWithLengthPrefix(_stream, new DirectoryListResponse(true, null, entries.ToArray(), request.Guid), PrefixStyle.Fixed32);
+                        var success = true;
+                        string errorMessage = null;
+                        try {
+                            foreach (var file in dir.GetFiles("*")) {
+                                var fileSecurity = new FileSecurity(file.FullName, AccessControlSections.Owner | AccessControlSections.Group | AccessControlSections.Access);
+                                if (Environment.OSVersion.Platform == PlatformID.Win32NT || Environment.OSVersion.Platform == PlatformID.Win32S || Environment.OSVersion.Platform == PlatformID.Win32Windows || Environment.OSVersion.Platform == PlatformID.WinCE || Environment.OSVersion.Platform == PlatformID.Xbox) {
+                                    entries.Add(new DirectoryEntry(
+                                        file.FullName,
+                                        true, 
+                                        file.Length,
+                                        0, 
+                                        777, 
+                                        fileSecurity.GetOwner(typeof(NTAccount)).Value.Split('\\')[1], 
+                                        fileSecurity.GetGroup(typeof(NTAccount)).Value.Split('\\')[1])
+                                    );
+                                } else {
+                                    entries.Add(new DirectoryEntry(
+                                        file.FullName,
+                                        true, 
+                                        file.Length,
+                                        0, 
+                                        777, 
+                                        fileSecurity.GetOwner(typeof(SecurityIdentifier)).Value, 
+                                        fileSecurity.GetGroup(typeof(SecurityIdentifier)).Value)
+                                    );
+                                }
+                            }
+                            foreach (var directory in dir.GetDirectories()) {
+                                var directorySecurity = new DirectorySecurity(directory.FullName,AccessControlSections.Owner | AccessControlSections.Group | AccessControlSections.Access);
+                                if (Environment.OSVersion.Platform == PlatformID.Win32NT || Environment.OSVersion.Platform == PlatformID.Win32S || Environment.OSVersion.Platform == PlatformID.Win32Windows || Environment.OSVersion.Platform == PlatformID.WinCE || Environment.OSVersion.Platform == PlatformID.Xbox) {
+                                    entries.Add(new DirectoryEntry(
+                                        directory.FullName, 
+                                        false, 
+                                        -1, 
+                                        (int)directory.LastWriteTime.TimeOfDay.TotalSeconds,
+                                        0, 
+                                        directorySecurity.GetOwner(typeof(NTAccount)).Value?.Split('\\')[1], 
+                                        directorySecurity.GetGroup(typeof(NTAccount)).Value?.Split('\\')[1])
+                                    );
+                                } else {
+                                    entries.Add(new DirectoryEntry(
+                                        directory.FullName, 
+                                        false, 
+                                        -1, 
+                                        (int)directory.LastWriteTime.TimeOfDay.TotalSeconds,
+                                        0, 
+                                        directorySecurity.GetOwner(typeof(SecurityIdentifier)).Value, 
+                                        directorySecurity.GetGroup(typeof(SecurityIdentifier)).Value)
+                                    );
+                                }
+                            }
+                        } catch (DirectoryNotFoundException) {
+                            success = false;
+                            errorMessage = "Directory not found";
+                        } catch {
+                            success = false;
+                            errorMessage = "Internal server error";
+                        }
+                        Serializer.SerializeWithLengthPrefix(_stream, new DirectoryListResponse(success, errorMessage, entries.ToArray(), request.Guid), PrefixStyle.Fixed32);
                         break;
                     case 9:
                         if (_isServer) {
@@ -284,6 +342,9 @@ namespace AFTPLib.Protocol {
                             break;
                         }
                         AsyncResponseBuffer.Add(protoStream);
+                        break;
+                    default:
+
                         break;
                 }
             }

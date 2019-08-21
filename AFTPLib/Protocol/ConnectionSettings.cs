@@ -13,7 +13,7 @@ namespace AFTPLib.Protocol {
     }
 
     public enum ConnectionEncryptionType : byte {
-        Ssl = 0,
+        Ssl = 1,
     }
 
     public enum PasswordEncryptionType {

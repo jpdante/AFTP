@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="2.4.0" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

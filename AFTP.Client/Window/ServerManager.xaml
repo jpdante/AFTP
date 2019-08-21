@@ -1,0 +1,40 @@
+﻿<mah:MetroWindow x:Class="AFTP.Client.Window.ServerManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AFTP.Client"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="Server Manager" Height="540" Width="701" WindowStartupLocation="CenterScreen" WindowTransitionsEnabled="False">
+    <Grid>
+        <TreeView Grid.Column="0" Margin="10,10,453,171">
+            <TreeViewItem Header="Cocaina">
+                <TreeViewItem Header="Deuterio"/>
+                <TreeViewItem Header="Gasolina"/>
+                <TreeViewItem Header="Farinha"/>
+                <TreeViewItem Header="Jabuticaba"/>
+            </TreeViewItem>
+        </TreeView>
+        <TabControl Margin="0,10,10,60" HorizontalAlignment="Right" Width="438" mah:TabControlHelper.Underlined="TabPanel">
+            <TabItem Header="Geral" mah:ControlsHelper.HeaderFontSize="17">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="TabItem" mah:ControlsHelper.HeaderFontSize="17">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+        <Button Content="New Server" Margin="7,0,574,134" Width="112" Height="32" VerticalAlignment="Bottom"/>
+        <Button Content="New Marker" Margin="7,0,574,97" Width="112" Height="32" VerticalAlignment="Bottom"/>
+        <Button Content="Delete" Margin="7,0,574,60" Width="112" Height="32" VerticalAlignment="Bottom"/>
+        <Button Content="Duplicate" Margin="128,0,453,60" Width="112" Height="32" VerticalAlignment="Bottom"/>
+        <Button Content="Rename" Margin="128,0,453,97" Width="112" Height="32" VerticalAlignment="Bottom"/>
+        <Button Content="New Foder" Margin="128,0,453,134" Width="112" Height="32" VerticalAlignment="Bottom"/>
+        <Grid Height="55" VerticalAlignment="Bottom">
+            <Rectangle Fill="#0C000000" Height="2" VerticalAlignment="Top"/>
+            <Button Content="Cancel" Margin="571,0,10,10" Width="112" Height="32" VerticalAlignment="Bottom"/>
+            <Button Content="OK" Margin="454,0,127,10" Width="112" Height="32" VerticalAlignment="Bottom"/>
+            <Button Content="Connect" Margin="337,0,244,10" Width="112" Height="32" VerticalAlignment="Bottom"/>
+        </Grid>
+    </Grid>
+</mah:MetroWindow>

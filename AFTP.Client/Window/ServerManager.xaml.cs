@@ -10,15 +10,15 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
-namespace AFTP.Client.Pages {
+namespace AFTP.Client.Window {
     /// <summary>
-    /// Interaction logic for HorizontalServerLocal.xaml
+    /// Interaction logic for ConnectionManager.xaml
     /// </summary>
-    public partial class HorizontalServerLocal : Page {
-        public HorizontalServerLocal() {
+    public partial class ServerManager : MetroWindow {
+        public ServerManager() {
             InitializeComponent();
         }
     }

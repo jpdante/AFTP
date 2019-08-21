@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="AFTP.Client.MainWindow"
+﻿<mah:MetroWindow x:Class="AFTP.Client.Window.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,49 +10,49 @@
     <Grid>
         <Menu Height="20" VerticalAlignment="Top" Background="White">
             <MenuItem Header="_File" Height="20">
-                <MenuItem Header="Manage connections"/>
+                <MenuItem Header="Manage connections" Click="ManageConnections_Click"/>
                 <Separator/>
-                <MenuItem Header="New tab" Command="New"/>
-                <MenuItem Header="Close tab" Command="Close"/>
+                <MenuItem Header="New tab" Command="New" Click="NewTab_Click"/>
+                <MenuItem Header="Close tab" Command="Close" Click="CloseTab_Click"/>
                 <Separator/>
                 <MenuItem Header="Export..."/>
                 <MenuItem Header="Import..."/>
                 <Separator/>
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="Exit" Click="Exit_Click"/>
             </MenuItem>
             <MenuItem Header="_Edit" Height="20">
-                <MenuItem Header="_Setup wizard"/>
+                <MenuItem Header="_Setup wizard" Click="SetupWizard_Click"/>
                 <Separator/>
-                <MenuItem Header="Settings"/>
+                <MenuItem Header="Settings" Click="Settings_Click"/>
             </MenuItem>
             <MenuItem Header="_View" Height="20">
-                <MenuItem Header="_Refresh" Command="Refresh"/>
+                <MenuItem Header="_Refresh" Command="Refresh" Click="Refresh_Click"/>
                 <Separator/>
                 <MenuItem Header="?"/>
                 <Separator/>
                 <MenuItem Header="?"/>
             </MenuItem>
             <MenuItem Header="_Transfer" Height="20">
-                <MenuItem Header="_Process queue"/>
+                <MenuItem Header="_Process queue" Click="ProcessQueue_Click"/>
                 <Separator/>
                 <MenuItem Header="?"/>
             </MenuItem>
             <MenuItem Header="_Server" Height="20">
-                <MenuItem Header="_Cancel current operation"/>
+                <MenuItem Header="_Cancel current operation" Click="CancelOperation_Click"/>
                 <Separator/>
-                <MenuItem Header="_Reconnect"/>
-                <MenuItem Header="_Disconnect"/>
+                <MenuItem Header="_Reconnect" Click="Reconnect_Click"/>
+                <MenuItem Header="_Disconnect" Click="Disconnect_Click"/>
                 <Separator/>
-                <MenuItem Header="_Search remote files"/>
-                <MenuItem Header="Show _hidden files"/>
+                <MenuItem Header="_Search remote files" Click="SearchRemoteFiles_Click"/>
+                <MenuItem Header="Show _hidden files" Click="ShowHidenFiles_Click"/>
             </MenuItem>
             <MenuItem Header="_Help" Height="20">
-                <MenuItem Header="Search for updates"/>
+                <MenuItem Header="Search for updates" Click="SearchUpdates_Click"/>
                 <Separator/>
-                <MenuItem Header="Get help"/>
-                <MenuItem Header="Report an error"/>
+                <MenuItem Header="Get help" Click="Help_Click"/>
+                <MenuItem Header="Report an error" Click="Report_Click"/>
                 <Separator/>
-                <MenuItem Header="About"/>
+                <MenuItem Header="About" Click="About_Click"/>
             </MenuItem>
         </Menu>
         <Grid Margin="0,20,0,0">

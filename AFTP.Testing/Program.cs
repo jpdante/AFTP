@@ -23,16 +23,16 @@ namespace AFTP.Testing {
             });
             aftpServer.Start();
             Console.WriteLine("AFTP Server started!");
-            var aftpClient = new AftpClient(new ClientConfig() {
+            var aftpClient = new AftpClient(new ClientConfig {
                 DisableCertificateCheck = true
             });
             Console.WriteLine("Connecting to 'localhost:49535'...");
             aftpClient.Connect("localhost", 49535, "user", "1234");
             Console.WriteLine("CONTINUE");
-            var data = aftpClient.GetDirectoryList(@"C:\Users\jpdante\Desktop").GetAwaiter().GetResult();
-            Console.WriteLine(data.Guid);
+            var data = aftpClient.GetDirectoryList(@"C:\Users\jpdante\Desktop\").GetAwaiter().GetResult();
+            Console.WriteLine($"ID: {data.Guid}, Success: {data.Success}, ErrorMessage: {data.ErrorMessage}");
             foreach (var i in data.DirectoryEntries) {
-                Console.WriteLine($"{i.FileName} - {i.IsFile} - {i.Size} - {i.Modified} - {i.Permissions} - {i.Owner}");
+                Console.WriteLine($"{i.FileName} - {i.IsFile} - {i.Size} - {i.Modified} - {i.Permissions} - {i.Owner} - {i.Group}");
             }
             Console.ReadKey();
         }

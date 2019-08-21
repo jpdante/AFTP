@@ -25,16 +25,20 @@ namespace AFTPLib.Protocol.Commands.Models {
         [ProtoMember(6)]
         public string Owner;
 
+        [ProtoMember(7)]
+        public string Group;
+
         public DirectoryEntry() {
         }
 
-        public DirectoryEntry(string fileName, bool isFile, long size, int modified, int permissions, string owner) {
+        public DirectoryEntry(string fileName, bool isFile, long size, int modified, int permissions, string owner, string group) {
             FileName = fileName;
             IsFile = isFile;
             Size = size;
             Modified = modified;
             Permissions = permissions;
             Owner = owner;
+            Group = group;
         }
     }
 }

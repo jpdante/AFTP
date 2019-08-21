@@ -70,7 +70,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Window\ServerManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -78,38 +82,41 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Window\ServerManager.xaml.cs">
+      <DependentUpon>ServerManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Window\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Pages\HorizontalServerLocal.xaml">
+    <Page Include="View\HorizontalServerLocal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\HorizontalServerOnly.xaml">
+    <Page Include="View\HorizontalServerOnly.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\VerticalServerLocal.xaml">
+    <Page Include="View\VerticalServerLocal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\VerticalServerOnly.xaml">
+    <Page Include="View\VerticalServerOnly.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pages\HorizontalServerLocal.xaml.cs">
+    <Compile Include="View\HorizontalServerLocal.xaml.cs">
       <DependentUpon>HorizontalServerLocal.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HorizontalServerOnly.xaml.cs">
+    <Compile Include="View\HorizontalServerOnly.xaml.cs">
       <DependentUpon>HorizontalServerOnly.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\VerticalServerLocal.xaml.cs">
+    <Compile Include="View\VerticalServerLocal.xaml.cs">
       <DependentUpon>VerticalServerLocal.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\VerticalServerOnly.xaml.cs">
+    <Compile Include="View\VerticalServerOnly.xaml.cs">
       <DependentUpon>VerticalServerOnly.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -138,5 +145,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
