@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using AFTP.Client.Model;
 using AFTP.Client.View;
 using MahApps.Metro.Controls;
 
@@ -17,7 +19,7 @@ namespace AFTP.Client.Window {
         }
 
         private void ManageConnections_Click(object sender, RoutedEventArgs e) {
-            var serverManager = new ServerManager();
+            var serverManager = new ServerManager(new List<ServerSettings>());
             serverManager.ShowDialog();
         }
 

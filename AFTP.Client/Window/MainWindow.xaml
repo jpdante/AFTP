@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="AFTP Client" Height="591" Width="933" WindowStartupLocation="CenterScreen" WindowTransitionsEnabled="False">
     <Grid>
-        <Menu Height="20" VerticalAlignment="Top" Background="White">
+        <Menu Height="20" VerticalAlignment="Top">
             <MenuItem Header="_File" Height="20">
                 <MenuItem Header="Manage connections" Click="ManageConnections_Click"/>
                 <Separator/>
@@ -63,7 +63,7 @@
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="100*"/>
             </Grid.RowDefinitions>
-            <RichTextBox Grid.Row="0" Background="#FFF0F0F0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" IsReadOnly="True" IsUndoEnabled="False">
+            <RichTextBox Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" IsReadOnly="True" IsUndoEnabled="False">
                 <FlowDocument>
                     <Paragraph>
                         <Run Text="Socorro"/>
@@ -75,13 +75,13 @@
             <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch"/>
             <TabControl Grid.Row="4" mah:TabControlHelper.Underlined="SelectedTabItem" >
                 <TabItem Header="Files in queue" mah:ControlsHelper.HeaderFontSize="12">
-                    <Grid Background="#FFE5E5E5" Margin="-3"/>
+                    <Grid Margin="-3"/>
                 </TabItem>
                 <TabItem Header="Failed transfers" mah:ControlsHelper.HeaderFontSize="12">
-                    <Grid Background="#FFE5E5E5" Margin="-3"/>
+                    <Grid Margin="-3"/>
                 </TabItem>
                 <TabItem Header="Successful transfers" mah:ControlsHelper.HeaderFontSize="12">
-                    <Grid Background="#FFE5E5E5" Margin="-3"/>
+                    <Grid Margin="-3"/>
                 </TabItem>
             </TabControl>
         </Grid>

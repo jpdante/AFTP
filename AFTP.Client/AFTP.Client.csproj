@@ -82,6 +82,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Enum\ServerSettingsType.cs" />
+    <Compile Include="Enum\ServerType.cs" />
+    <Compile Include="Model\ServerSettings.cs" />
     <Compile Include="Window\ServerManager.xaml.cs">
       <DependentUpon>ServerManager.xaml</DependentUpon>
     </Compile>
