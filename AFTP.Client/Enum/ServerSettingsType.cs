@@ -3,6 +3,12 @@
         Username,
         Password,
         AccessKey,
-        SecreteKey
+        SecreteKey,
+        DefaultLocalDirectory,
+        DefaultRemoteDirectory,
+        TransferMode,
+        LimitSimultaneousConnections,
+        MaximunConnections,
+        CharsetEncoding
     }
 }

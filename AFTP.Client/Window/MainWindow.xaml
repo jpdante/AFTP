@@ -71,7 +71,7 @@
                 </FlowDocument>
             </RichTextBox>
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"/>
-            <Frame Name="Frame" Grid.Row="2"/>
+            <Frame Name="Frame" Grid.Row="2" NavigationUIVisibility="Hidden"/>
             <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch"/>
             <TabControl Grid.Row="4" mah:TabControlHelper.Underlined="SelectedTabItem" >
                 <TabItem Header="Files in queue" mah:ControlsHelper.HeaderFontSize="12">

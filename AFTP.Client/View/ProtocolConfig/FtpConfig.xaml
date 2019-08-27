@@ -1,0 +1,58 @@
+﻿<Page x:Class="AFTP.Client.View.ProtocolConfig.FtpConfig"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AFTP.Client.View.ProtocolConfig"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" 
+      d:DesignHeight="390.125" d:DesignWidth="371.518"
+      Title="FtpConfig">
+
+    <Grid>
+     <!--           <TabControl Margin="0,213,10,60" HorizontalAlignment="Right" Width="438" mah:TabControlHelper.Underlined="TabPanel">
+            <TabItem Header="Geral" mah:ControlsHelper.HeaderFontSize="17"/>
+            <TabItem Header="Advanced" mah:ControlsHelper.HeaderFontSize="17">
+                <Grid Background="#19000000">
+                    <Button x:Name="BrowserLocalDirectory" Content="Browse..." Margin="0,36,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="88" Height="23" IsEnabled="False"/>
+                    <Label Content="Default local directory:" Margin="10,10,10,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="LocalDirectory" Height="23" Margin="10,36,103,0" TextWrapping="Wrap" VerticalAlignment="Top" IsEnabled="False"/>
+                    <Label Content="Default remote directory:" Margin="10,64,10,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="RemoteDirectory" Height="23" Margin="10,90,103,0" TextWrapping="Wrap" VerticalAlignment="Top" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Transfer Settings" mah:ControlsHelper.HeaderFontSize="17">
+                <Grid Background="#19000000">
+                    <RadioButton x:Name="TranferModeDefault" Content="Default" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" IsChecked="True" GroupName="TMode" IsEnabled="False"/>
+                    <Label Content="Transfer mode:" Margin="10,10,10,0" VerticalAlignment="Top"/>
+                    <RadioButton x:Name="TransferModePassive" Content="Passive" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top" GroupName="TMode" IsEnabled="False"/>
+                    <RadioButton x:Name="TransferModeActive" Content="Active" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" GroupName="TMode" IsEnabled="False"/>
+                    <CheckBox x:Name="LimitSimultaneousConnections" Content="Limit number of simultaneous connections" Margin="10,114,10,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <mah:NumericUpDown x:Name="ConnectionNumber" Margin="208,148,140,219" NumericInputMode="Numbers" Value="1" Maximum="100" Minimum="1" StringFormat="0   " IsEnabled="False"/>
+                    <Label Content="Maximum number of connections:" HorizontalAlignment="Left" Margin="10,148,0,0" VerticalAlignment="Top" Width="193"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Charset" mah:ControlsHelper.HeaderFontSize="17">
+                <Grid Background="#19000000">
+                    <Label Content="Server filename charset encoding:" Margin="10,10,10,0" VerticalAlignment="Top"/>
+                    <RadioButton x:Name="CharsetEncodingAutoDetect" Content="Auto Detect" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" GroupName="Charset" IsChecked="True" IsEnabled="False"/>
+                    <RadioButton x:Name="CharsetEncodingUTF8" Content="UTF-8" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" GroupName="Charset" IsEnabled="False"/>
+                    <RadioButton x:Name="CharsetEncodingASCII" Content="ASCII" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top" GroupName="Charset" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+        </TabControl>-->
+        <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,3,0,0"/>
+        <Label Content="Host:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="86"/>
+        <TextBox x:Name="Host" Height="26" Margin="96,10,86,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="127.0.0.1" Foreground="{DynamicResource MaterialDesignBody}"/>
+        <Label Content="Port:" Margin="0,10,47,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="39"/>
+        <TextBox x:Name="Port" Height="26" Margin="0,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="21" HorizontalAlignment="Right" Width="37" Foreground="{DynamicResource MaterialDesignBody}"/>
+        <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,74,0,0"/>
+        <Label Content="Username:" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="86"/>
+        <TextBox x:Name="Username" Height="26" Margin="96,81,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Root" Foreground="{DynamicResource MaterialDesignBody}"/>
+        <Label Content="Password:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86"/>
+        <PasswordBox x:Name="Password" Margin="96,112,10,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="Password" Foreground="{DynamicResource MaterialDesignBody}"/>
+        <CheckBox x:Name="AnonymousLogin" Content="Anonymous Login" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top" Unchecked="AnonymousLogin_Unchecked" Checked="AnonymousLogin_Checked" Foreground="{DynamicResource MaterialDesignBody}"/>
+        <Label Content="Encryption:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="86"/>
+        <ComboBox Margin="96,41,10,0" VerticalAlignment="Top" Height="26"/>
+    </Grid>
+</Page>

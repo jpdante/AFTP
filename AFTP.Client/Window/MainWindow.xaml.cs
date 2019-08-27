@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
+using System.Windows.Shapes;
 using AFTP.Client.Model;
+using AFTP.Client.Model.Server;
+using AFTP.Client.Util;
 using AFTP.Client.View;
+using AFTP.Client.View.Explorer;
 using MahApps.Metro.Controls;
 
 namespace AFTP.Client.Window {
@@ -10,17 +15,25 @@ namespace AFTP.Client.Window {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : MetroWindow {
-
+        private readonly ConfigLoader _configLoader;
+        private AftpClientConfig _config;
 
         public MainWindow() {
             InitializeComponent();
+            var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"AftpClient\");
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            var configPath = System.IO.Path.Combine(folder, "config.json");
+            _configLoader = new ConfigLoader(configPath);
+            _config = _configLoader.LoadConfig();
             var hsl = new HorizontalServerOnly();
             Frame.Content = hsl;
         }
 
         private void ManageConnections_Click(object sender, RoutedEventArgs e) {
-            var serverManager = new ServerManager(new List<ServerSettings>());
+            var serverManager = new ServerManager(_config.Servers);
             serverManager.ShowDialog();
+            _config.Servers = serverManager.ServerSettings;
+            _configLoader.SaveConfig(_config);
         }
 
         private void NewTab_Click(object sender, RoutedEventArgs e) {

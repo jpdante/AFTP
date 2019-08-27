@@ -38,6 +38,9 @@
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\ControlzEx.dll</HintPath>
     </Reference>
+    <Reference Include="FluentFTP, Version=27.0.3.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentFTP.27.0.3\lib\net45\FluentFTP.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net47\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -47,8 +50,12 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.6.0.325, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.6.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -70,6 +77,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Control\ServerTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ProtocolConfig\AftpConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ProtocolConfig\FtpConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ProtocolConfig\S3Config.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ProtocolConfig\SftpConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ProtocolConfig\SmbConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Window\ServerManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -82,9 +113,31 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Control\ServerTreeView.xaml.cs">
+      <DependentUpon>ServerTreeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enum\ServerSettingsType.cs" />
     <Compile Include="Enum\ServerType.cs" />
-    <Compile Include="Model\ServerSettings.cs" />
+    <Compile Include="Model\Server\AftpClientConfig.cs" />
+    <Compile Include="Model\Server\NotifyPropertyChanged.cs" />
+    <Compile Include="Model\Server\ServerConfig.cs" />
+    <Compile Include="Model\Server\ServerTreeViewItem.cs" />
+    <Compile Include="Util\ConfigLoader.cs" />
+    <Compile Include="View\ProtocolConfig\AftpConfig.xaml.cs">
+      <DependentUpon>AftpConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProtocolConfig\FtpConfig.xaml.cs">
+      <DependentUpon>FtpConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProtocolConfig\S3Config.xaml.cs">
+      <DependentUpon>S3Config.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProtocolConfig\SftpConfig.xaml.cs">
+      <DependentUpon>SftpConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProtocolConfig\SmbConfig.xaml.cs">
+      <DependentUpon>SmbConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Window\ServerManager.xaml.cs">
       <DependentUpon>ServerManager.xaml</DependentUpon>
     </Compile>
@@ -92,34 +145,34 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\HorizontalServerLocal.xaml">
+    <Page Include="View\Explorer\HorizontalServerLocal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\HorizontalServerOnly.xaml">
+    <Page Include="View\Explorer\HorizontalServerOnly.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\VerticalServerLocal.xaml">
+    <Page Include="View\Explorer\VerticalServerLocal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\VerticalServerOnly.xaml">
+    <Page Include="View\Explorer\VerticalServerOnly.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="View\HorizontalServerLocal.xaml.cs">
+    <Compile Include="View\Explorer\HorizontalServerLocal.xaml.cs">
       <DependentUpon>HorizontalServerLocal.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\HorizontalServerOnly.xaml.cs">
+    <Compile Include="View\Explorer\HorizontalServerOnly.xaml.cs">
       <DependentUpon>HorizontalServerOnly.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\VerticalServerLocal.xaml.cs">
+    <Compile Include="View\Explorer\VerticalServerLocal.xaml.cs">
       <DependentUpon>VerticalServerLocal.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\VerticalServerOnly.xaml.cs">
+    <Compile Include="View\Explorer\VerticalServerOnly.xaml.cs">
       <DependentUpon>VerticalServerOnly.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">

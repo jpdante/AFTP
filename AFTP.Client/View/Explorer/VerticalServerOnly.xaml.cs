@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace AFTP.Client.View {
+namespace AFTP.Client.View.Explorer {
     /// <summary>
     /// Interaction logic for VerticalServerOnly.xaml
     /// </summary>
