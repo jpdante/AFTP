@@ -77,10 +77,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Control\ServerTreeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\ProtocolConfig\AftpConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -113,13 +109,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Control\ServerTreeView.xaml.cs">
-      <DependentUpon>ServerTreeView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Enum\ServerSettingsType.cs" />
     <Compile Include="Enum\ServerType.cs" />
     <Compile Include="Model\Server\AftpClientConfig.cs" />
-    <Compile Include="Model\Server\NotifyPropertyChanged.cs" />
     <Compile Include="Model\Server\ServerConfig.cs" />
     <Compile Include="Model\Server\ServerTreeViewItem.cs" />
     <Compile Include="Util\ConfigLoader.cs" />

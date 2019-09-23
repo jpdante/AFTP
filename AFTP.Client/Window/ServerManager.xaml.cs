@@ -29,17 +29,9 @@ namespace AFTP.Client.Window {
         public int CurrentEdit = -1;
         public bool AllowEvents = false;
 
-        public ObservableCollection<ServerTreeViewItem> TreeViewData;
-
         public ServerManager(IReadOnlyCollection<ServerConfig> serverSettings) {
             InitializeComponent();
-            ServerSettings = new List<ServerConfig>(serverSettings.Count);
-            TreeViewData = new ObservableCollection<ServerTreeViewItem>();
-            ServerTreeView.TreeView.ItemsSource = TreeViewData;
-            foreach (var server in serverSettings) {
-                ServerSettings.Add(server);
-                TreeViewData.Add(new ServerTreeViewItem(server.Name, true, server));
-            }
+            ServerSettings = serverSettings.ToList();
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e) {
@@ -55,7 +47,7 @@ namespace AFTP.Client.Window {
         }
 
         private void UpdateList() {
-            /*ServerTreeView.Items.Clear();
+            ServerTreeView.Items.Clear();
             foreach (var server in ServerSettings) {
                 if (string.IsNullOrEmpty(server.Group)) {
                     ServerTreeView.Items.Add(new TreeViewItem() {
@@ -94,13 +86,13 @@ namespace AFTP.Client.Window {
                 if (!treeViewItem.Uid.Equals(ServerSettings[CurrentEdit].Uid)) continue;
                 treeViewItem.IsSelected = true;
                 return;
-            }*/
+            }
         }
 
         private string GenerateServerName() {
             var id = 0;
             foreach (var server in ServerSettings) {
-                if(server.Name.Equals($"Server{id}", StringComparison.CurrentCultureIgnoreCase)) id++;
+                if (server.Name.Equals($"Server{id}", StringComparison.CurrentCultureIgnoreCase)) id++;
             }
             return $"Server{id}";
         }
@@ -126,7 +118,7 @@ namespace AFTP.Client.Window {
         }
 
         private void ServerTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-           /* if (!(ServerTreeView.SelectedItem is TreeViewItem item)) return;
+            if (!(ServerTreeView.SelectedItem is TreeViewItem item)) return;
             AllowEvents = false;
             CurrentEdit = -1;
             foreach (var server in ServerSettings) {
@@ -161,7 +153,7 @@ namespace AFTP.Client.Window {
                 SetInputEnabled(false);
                 ProtocolConfigFrame.Content = null;
             }
-            AllowEvents = true;*/
+            AllowEvents = true;
         }
 
         private void ServerName_TextChanged(object sender, TextChangedEventArgs e) {

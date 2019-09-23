@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:AFTP.Client"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:Control="clr-namespace:AFTP.Client.Control" x:Class="AFTP.Client.Window.ServerManager"
+        x:Class="AFTP.Client.Window.ServerManager"
         mc:Ignorable="d"
-        Title="Server Manager" Height="540" Width="701" WindowStartupLocation="CenterScreen" WindowTransitionsEnabled="False" MinWidth="701" MinHeight="540" ShowMinButton="False" ShowMaxRestoreButton="False" Loaded="MetroWindow_Loaded" Background="{x:Null}">
+        Title="Server Manager" Height="540" Width="701" WindowStartupLocation="CenterScreen" WindowTransitionsEnabled="False" MinWidth="701" MinHeight="540" ShowMinButton="False" ShowMaxRestoreButton="False" Loaded="MetroWindow_Loaded">
     <Grid>
         <!--<TreeView x:Name="ServerTreeView" Grid.Column="0" Margin="10,10,453,134" Background="#19000000" SelectedItemChanged="ServerTreeView_SelectedItemChanged">
         </TreeView>-->
@@ -35,8 +35,8 @@
         <Label Content="Server Group:" HorizontalAlignment="Left" Margin="245,41,0,0" VerticalAlignment="Top" Width="86"/>
         <TextBox x:Name="ServerGroup" Height="26" Margin="331,41,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="None" TextChanged="ServerGroup_TextChanged" IsEnabled="False"/>
         <Grid Background="#19000000" HorizontalAlignment="Right" Width="438" Margin="0,103,10,60">
-            <Frame x:Name="ProtocolConfigFrame" Margin="0,103,0,0" NavigationUIVisibility="Hidden"/>
+            <Frame x:Name="ProtocolConfigFrame" NavigationUIVisibility="Hidden"/>
         </Grid>
-        <Control:ServerTreeView x:Name="ServerTreeView" HorizontalAlignment="Left" Height="365" Margin="10,10,0,0" VerticalAlignment="Top" Width="230"/>
+        <TreeView x:Name="ServerTreeView" HorizontalAlignment="Left" Height="365" Margin="10,10,0,0" VerticalAlignment="Top" Width="230" SelectedItemChanged="ServerTreeView_SelectedItemChanged"/>
     </Grid>
 </mah:MetroWindow>
