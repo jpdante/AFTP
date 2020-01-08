@@ -3,7 +3,6 @@
         Aftp,
         Ftp,
         Sftp,
-        S3,
         Smb
     }
 }

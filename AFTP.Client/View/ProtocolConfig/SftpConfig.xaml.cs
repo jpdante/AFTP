@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AFTP.Client.Model.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,8 +19,14 @@ namespace AFTP.Client.View.ProtocolConfig {
     /// Interaction logic for SftpConfig.xaml
     /// </summary>
     public partial class SftpConfig : Page {
+        private ServerConfig server;
+
         public SftpConfig() {
             InitializeComponent();
+        }
+
+        public SftpConfig(ServerConfig server) {
+            this.server = server;
         }
     }
 }

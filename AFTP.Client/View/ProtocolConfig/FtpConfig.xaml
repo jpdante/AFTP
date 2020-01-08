@@ -5,12 +5,49 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AFTP.Client.View.ProtocolConfig"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       mc:Ignorable="d" 
       d:DesignHeight="390.125" d:DesignWidth="371.518"
-      Title="FtpConfig">
+      Title="FtpConfig" Loaded="Page_Loaded">
 
     <Grid>
-     <!--           <TabControl Margin="0,213,10,60" HorizontalAlignment="Right" Width="438" mah:TabControlHelper.Underlined="TabPanel">
+        <TabControl>
+            <TabItem Header="General" mah:ControlsHelper.HeaderFontSize="15">
+                <Grid>
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,3,0,0"/>
+                    <Label Content="Host:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="86"/>
+                    <TextBox x:Name="Host" Height="26" Margin="96,10,86,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="127.0.0.1" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Host_TextChanged"/>
+                    <Label Content="Port:" Margin="0,10,47,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="39"/>
+                    <TextBox x:Name="Port" Height="26" Margin="0,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="21" HorizontalAlignment="Right" Width="37" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Port_TextChanged" PreviewTextInput="Port_PreviewTextInput" Text="21"/>
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,74,0,0"/>
+                    <Label Content="Username:" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="86"/>
+                    <TextBox x:Name="Username" Height="26" Margin="96,81,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Root" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Username_TextChanged"/>
+                    <Label Content="Password:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86"/>
+                    <PasswordBox x:Name="Password" Margin="96,112,10,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="Password" Foreground="{DynamicResource MaterialDesignBody}" PasswordChanged="Password_PasswordChanged"/>
+                    <CheckBox x:Name="AnonymousLogin" Content="Anonymous Login" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top" Unchecked="AnonymousLogin_Unchecked" Checked="AnonymousLogin_Checked" Foreground="{DynamicResource MaterialDesignBody}"/>
+                    <Label Content="Encryption:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="86"/>
+                    <ComboBox x:Name="EncryptionComboBox" Margin="96,41,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="0" Background="#FF252525" BorderBrush="#89FFFFFF" Foreground="White" SelectionChanged="EncryptionComboBox_SelectionChanged">
+                        <ComboBoxItem Content="Use Explicit FTP Over TLS if avalible"/>
+                        <ComboBoxItem Content="Require Explicit FTP Over TLS"/>
+                        <ComboBoxItem Content="Require Implicit FTP Over TLS"/>
+                        <ComboBoxItem Content="Plain FTP"/>
+                    </ComboBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Advanced" mah:ControlsHelper.HeaderFontSize="15">
+                <Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Transfer Settings" mah:ControlsHelper.HeaderFontSize="15">
+                <Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Charset" mah:ControlsHelper.HeaderFontSize="15">
+                <Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <!--           <TabControl Margin="0,213,10,60" HorizontalAlignment="Right" Width="438" mah:TabControlHelper.Underlined="TabPanel">
             <TabItem Header="Geral" mah:ControlsHelper.HeaderFontSize="17"/>
             <TabItem Header="Advanced" mah:ControlsHelper.HeaderFontSize="17">
                 <Grid Background="#19000000">
@@ -41,18 +78,5 @@
                 </Grid>
             </TabItem>
         </TabControl>-->
-        <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,3,0,0"/>
-        <Label Content="Host:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="86"/>
-        <TextBox x:Name="Host" Height="26" Margin="96,10,86,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="127.0.0.1" Foreground="{DynamicResource MaterialDesignBody}"/>
-        <Label Content="Port:" Margin="0,10,47,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="39"/>
-        <TextBox x:Name="Port" Height="26" Margin="0,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="21" HorizontalAlignment="Right" Width="37" Foreground="{DynamicResource MaterialDesignBody}"/>
-        <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,74,0,0"/>
-        <Label Content="Username:" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="86"/>
-        <TextBox x:Name="Username" Height="26" Margin="96,81,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Root" Foreground="{DynamicResource MaterialDesignBody}"/>
-        <Label Content="Password:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86"/>
-        <PasswordBox x:Name="Password" Margin="96,112,10,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="Password" Foreground="{DynamicResource MaterialDesignBody}"/>
-        <CheckBox x:Name="AnonymousLogin" Content="Anonymous Login" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top" Unchecked="AnonymousLogin_Unchecked" Checked="AnonymousLogin_Checked" Foreground="{DynamicResource MaterialDesignBody}"/>
-        <Label Content="Encryption:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="86"/>
-        <ComboBox Margin="96,41,10,0" VerticalAlignment="Top" Height="26"/>
     </Grid>
 </Page>

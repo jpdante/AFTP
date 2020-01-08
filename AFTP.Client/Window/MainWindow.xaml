@@ -66,7 +66,7 @@
             <RichTextBox Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" IsReadOnly="True" IsUndoEnabled="False">
                 <FlowDocument>
                     <Paragraph>
-                        <Run Text="Socorro"/>
+                        <Run Text="Test"/>
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>

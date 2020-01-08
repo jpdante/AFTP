@@ -2,6 +2,7 @@
     public enum ServerSettingsType {
         Username,
         Password,
+        Encryption,
         AccessKey,
         SecreteKey,
         DefaultLocalDirectory,

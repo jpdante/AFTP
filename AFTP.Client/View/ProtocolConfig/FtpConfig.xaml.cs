@@ -1,7 +1,9 @@
-﻿using System;
+﻿using AFTP.Client.Model.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,14 +14,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AFTP.Client.Enum;
 
 namespace AFTP.Client.View.ProtocolConfig {
     /// <summary>
     /// Interaction logic for FtpConfig.xaml
     /// </summary>
     public partial class FtpConfig : Page {
-        public FtpConfig() {
+        private ServerConfig _serverConfig;
+        private static readonly Regex PortRegex = new Regex("[^0-9]+");
+
+        public FtpConfig(ServerConfig server) {
             InitializeComponent();
+            this._serverConfig = server;
         }
 
         private void AnonymousLogin_Unchecked(object sender, RoutedEventArgs e) {
@@ -34,6 +41,65 @@ namespace AFTP.Client.View.ProtocolConfig {
             Password.IsEnabled = false;
             Username.Text = "anonymous";
             Password.Password = "anonymous";
+        }
+
+        private void Username_TextChanged(object sender, TextChangedEventArgs e) {
+            if (_serverConfig == null) return;
+            _serverConfig.Settings[ServerSettingsType.Username] = Username.Text;
+        }
+
+        private void Password_PasswordChanged(object sender, RoutedEventArgs e) {
+            if (_serverConfig == null) return;
+            _serverConfig.Settings[ServerSettingsType.Password] = Password.Password;
+        }
+
+        private void Host_TextChanged(object sender, TextChangedEventArgs e) {
+            if (_serverConfig == null) return;
+            _serverConfig.Host = Host.Text;
+        }
+
+        private void Port_TextChanged(object sender, TextChangedEventArgs e) {
+            if (Port.Text.Length == 0) return;
+            var port = int.Parse(Port.Text);
+            if (port < 0) Port.Text = "0";
+            if (port > 65535) Port.Text = "65535";
+            if (_serverConfig == null) return;
+            _serverConfig.Port = port;
+        }
+
+        private void Port_PreviewTextInput(object sender, TextCompositionEventArgs e) {
+            e.Handled = PortRegex.IsMatch(e.Text);
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e) {
+            if (_serverConfig == null) return;
+            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username) && _serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out var password)) {
+                if (username.Equals("anonymous") && password.Equals("anonymous")) {
+                    Username.IsEnabled = false;
+                    Password.IsEnabled = false;
+                    Username.Text = "anonymous";
+                    Password.Password = "anonymous";
+                    AnonymousLogin.IsChecked = true;
+                } else {
+                    Username.Text = username;
+                    Password.Password = password;
+                }
+            } else {
+                Username.Text = "";
+                Password.Password = "";
+            }
+            if(_serverConfig.Host != null) Host.Text = _serverConfig.Host;
+            Port.Text = _serverConfig.Port == 0 ? "21" : _serverConfig.Port.ToString();
+            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Encryption, out var encryption)) {
+                if (int.TryParse(encryption, out var result)) {
+                    EncryptionComboBox.SelectedIndex = result;
+                }
+            }
+        }
+
+        private void EncryptionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (_serverConfig == null) return;
+            _serverConfig.Settings[ServerSettingsType.Encryption] = EncryptionComboBox.SelectedIndex.ToString();
         }
     }
 }

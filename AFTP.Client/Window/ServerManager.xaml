@@ -10,31 +10,34 @@
         mc:Ignorable="d"
         Title="Server Manager" Height="540" Width="701" WindowStartupLocation="CenterScreen" WindowTransitionsEnabled="False" MinWidth="701" MinHeight="540" ShowMinButton="False" ShowMaxRestoreButton="False" Loaded="MetroWindow_Loaded">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="149*"/>
+            <ColumnDefinition Width="82*"/>
+        </Grid.ColumnDefinitions>
         <!--<TreeView x:Name="ServerTreeView" Grid.Column="0" Margin="10,10,453,134" Background="#19000000" SelectedItemChanged="ServerTreeView_SelectedItemChanged">
         </TreeView>-->
-        <Button Content="New Server" Margin="7,0,574,97" Width="112" Height="32" VerticalAlignment="Bottom" Click="NewServer_Click"/>
-        <Button x:Name="DeleteServer" Content="Delete" Margin="7,0,574,60" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="DeleteServer_Click"/>
-        <Button x:Name="DuplicateServer" Content="Duplicate" Margin="128,0,453,60" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="DuplicateServer_Click"/>
-        <Button x:Name="RenameServer" Content="Rename" Margin="128,0,453,97" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="RenameServer_Click"/>
-        <Grid Height="55" VerticalAlignment="Bottom">
+        <Button Content="New Server" Margin="7,0,0,97" Width="112" Height="32" VerticalAlignment="Bottom" Click="NewServer_Click" HorizontalAlignment="Left"/>
+        <Button x:Name="DeleteServer" Content="Delete" Margin="7,0,0,60" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="DeleteServer_Click" HorizontalAlignment="Left"/>
+        <Button x:Name="DuplicateServer" Content="Duplicate" Margin="128,0,0,60" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="DuplicateServer_Click" HorizontalAlignment="Left"/>
+        <Button x:Name="RenameServer" Content="Rename" Margin="128,0,0,97" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="RenameServer_Click" HorizontalAlignment="Left"/>
+        <Grid Height="55" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
             <Rectangle Fill="#0C000000" Height="2" VerticalAlignment="Top"/>
             <Button Content="Cancel" Margin="0,0,10,10" Width="112" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" IsCancel="True"/>
             <Button Content="OK" Margin="0,0,127,10" Width="112" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" IsDefault="True" Click="Ok_Click"/>
             <Button x:Name="ConnectServer" Content="Connect" Margin="0,0,244,10" Width="112" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" IsEnabled="False" Click="ConnectServer_Click"/>
         </Grid>
         <Label Content="Protocol:" HorizontalAlignment="Left" Margin="245,72,0,0" VerticalAlignment="Top" Width="86"/>
-        <ComboBox x:Name="ServerProtocol" Margin="331,72,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="0" SelectionChanged="ServerProtocol_SelectionChanged" IsEnabled="False" Background="#FF212121">
+        <ComboBox x:Name="ServerProtocol" Margin="331,72,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="0" SelectionChanged="ServerProtocol_SelectionChanged" IsEnabled="False" Background="#FF252525" Grid.ColumnSpan="2" Foreground="White">
             <ComboBoxItem Content="AFTP"/>
             <ComboBoxItem Content="FTP"/>
             <ComboBoxItem Content="SFTP"/>
-            <ComboBoxItem Content="S3 Compatible"/>
             <ComboBoxItem Content="SMB"/>
         </ComboBox>
-        <TextBox x:Name="ServerName" Height="26" Margin="331,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Cannot be empty" TextChanged="ServerName_TextChanged" IsEnabled="False"/>
+        <TextBox x:Name="ServerName" Height="26" Margin="331,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Cannot be empty" TextChanged="ServerName_TextChanged" IsEnabled="False" Grid.ColumnSpan="2"/>
         <Label Content="Server Name:" HorizontalAlignment="Left" Margin="245,10,0,0" VerticalAlignment="Top" Width="86"/>
         <Label Content="Server Group:" HorizontalAlignment="Left" Margin="245,41,0,0" VerticalAlignment="Top" Width="86"/>
-        <TextBox x:Name="ServerGroup" Height="26" Margin="331,41,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="None" TextChanged="ServerGroup_TextChanged" IsEnabled="False"/>
-        <Grid Background="#19000000" HorizontalAlignment="Right" Width="438" Margin="0,103,10,60">
+        <TextBox x:Name="ServerGroup" Height="26" Margin="331,41,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="None" TextChanged="ServerGroup_TextChanged" IsEnabled="False" Grid.ColumnSpan="2"/>
+        <Grid Margin="245,103,10,60" Grid.ColumnSpan="2">
             <Frame x:Name="ProtocolConfigFrame" NavigationUIVisibility="Hidden"/>
         </Grid>
         <TreeView x:Name="ServerTreeView" HorizontalAlignment="Left" Height="365" Margin="10,10,0,0" VerticalAlignment="Top" Width="230" SelectedItemChanged="ServerTreeView_SelectedItemChanged"/>

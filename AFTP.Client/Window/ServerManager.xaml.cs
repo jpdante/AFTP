@@ -126,21 +126,19 @@ namespace AFTP.Client.Window {
                 CurrentEdit = ServerSettings.IndexOf(server);
                 ServerName.Text = server.Name;
                 ServerGroup.Text = server.Group;
+                ServerProtocol.SelectedIndex = (int)server.Type;
                 switch (server.Type) {
                     case ServerType.Aftp:
                         ProtocolConfigFrame.Content = new AftpConfig(server);
                         break;
                     case ServerType.Ftp:
-                        ProtocolConfigFrame.Content = new FtpConfig();
+                        ProtocolConfigFrame.Content = new FtpConfig(server);
                         break;
                     case ServerType.Sftp:
-                        ProtocolConfigFrame.Content = new SftpConfig();
-                        break;
-                    case ServerType.S3:
-                        ProtocolConfigFrame.Content = new S3Config();
+                        ProtocolConfigFrame.Content = new SftpConfig(server);
                         break;
                     case ServerType.Smb:
-                        ProtocolConfigFrame.Content = new SmbConfig();
+                        ProtocolConfigFrame.Content = new SmbConfig(server);
                         break;
                     default:
                         break;
@@ -177,19 +175,15 @@ namespace AFTP.Client.Window {
                     break;
                 case 1:
                     ServerSettings[CurrentEdit].Type = ServerType.Ftp;
-                    ProtocolConfigFrame.Content = new FtpConfig();
+                    ProtocolConfigFrame.Content = new FtpConfig(ServerSettings[CurrentEdit]);
                     break;
                 case 2:
                     ServerSettings[CurrentEdit].Type = ServerType.Sftp;
-                    ProtocolConfigFrame.Content = new SftpConfig();
+                    ProtocolConfigFrame.Content = new SftpConfig(ServerSettings[CurrentEdit]);
                     break;
                 case 3:
-                    ServerSettings[CurrentEdit].Type = ServerType.S3;
-                    ProtocolConfigFrame.Content = new S3Config();
-                    break;
-                case 4:
                     ServerSettings[CurrentEdit].Type = ServerType.Smb;
-                    ProtocolConfigFrame.Content = new SmbConfig();
+                    ProtocolConfigFrame.Content = new SmbConfig(ServerSettings[CurrentEdit]);
                     break;
                 default:
                     break;

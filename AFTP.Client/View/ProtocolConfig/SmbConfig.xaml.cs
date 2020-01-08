@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AFTP.Client.Model.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,8 +19,14 @@ namespace AFTP.Client.View.ProtocolConfig {
     /// Interaction logic for SmbConfig.xaml
     /// </summary>
     public partial class SmbConfig : Page {
+        private ServerConfig server;
+
         public SmbConfig() {
             InitializeComponent();
+        }
+
+        public SmbConfig(ServerConfig server) {
+            this.server = server;
         }
     }
 }
