@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
-namespace AFTP.Client.Model.Utils {
+namespace AFTP.Client.Model.Util {
     public class LogTraceListener : TraceListener {
 
         public delegate void WriteHandler(object sender, string data);

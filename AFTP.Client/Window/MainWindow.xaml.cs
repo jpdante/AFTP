@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -8,7 +9,8 @@ using AFTP.Client.Enum;
 using AFTP.Client.Model;
 using AFTP.Client.Model.Client;
 using AFTP.Client.Model.Config;
-using AFTP.Client.Model.Utils;
+using AFTP.Client.Model.Util;
+using AFTP.Client.Model.View;
 using AFTP.Client.Util;
 using AFTP.Client.View;
 using AFTP.Client.View.Explorer;
@@ -22,6 +24,8 @@ namespace AFTP.Client.Window {
         private readonly ConfigLoader _configLoader;
         private readonly AftpClientConfig _config;
         private BaseClient _currentClient;
+        private ServerConfig _currentServerConfig;
+        private FileExplorer _currentFileExplorer;
 
         public MainWindow() {
             InitializeComponent();
@@ -30,8 +34,8 @@ namespace AFTP.Client.Window {
             var configPath = System.IO.Path.Combine(folder, "config.json");
             _configLoader = new ConfigLoader(configPath);
             _config = _configLoader.LoadConfig();
-            var hsl = new HorizontalServerOnly();
-            Frame.Content = hsl;
+            _currentFileExplorer = new HorizontalServerOnly();
+            Frame.Content = _currentFileExplorer;
             LogTraceListener.OnWrite += this.LogTraceListener_OnWrite;
             LogTraceListener.OnWriteLine += this.LogTraceListener_OnWriteLine;
         }
@@ -81,8 +85,28 @@ namespace AFTP.Client.Window {
                     case ServerType.Sftp:
                         break;
                 }
+                _currentServerConfig = server;
+                BindEvents();
                 _currentClient?.Connect();
             }
+        }
+
+        private void BindEvents() {
+            _currentClient.OnConnected += CurrentClientOnOnConnected;
+            _currentClient.OnDisconnected += CurrentClientOnOnDisconnected;
+        }
+
+        private void CurrentClientOnOnDisconnected(object sender) {
+
+        }
+
+        private async void CurrentClientOnOnConnected(object sender) {
+            _currentServerConfig.Settings.TryGetValue(ServerSettingsType.DefaultRemoteDirectory, out var path);
+            if (string.IsNullOrEmpty(path)) {
+                path = "/";
+            }
+            var remoteEntries = await _currentClient.ListDirectory(path, CancellationToken.None);
+            _currentFileExplorer.UpdateRemoteEntries(remoteEntries);
         }
 
         private void NewTab_Click(object sender, RoutedEventArgs e) {

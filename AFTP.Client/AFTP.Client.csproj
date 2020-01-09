@@ -156,6 +156,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Enum\RemoteEntryType.cs" />
     <Compile Include="Enum\ServerSettingsType.cs" />
     <Compile Include="Enum\ServerType.cs" />
     <Compile Include="Model\Client\BaseFtpClient.cs" />
@@ -163,7 +164,14 @@
     <Compile Include="Model\Config\AftpClientConfig.cs" />
     <Compile Include="Model\Config\ServerConfig.cs" />
     <Compile Include="Model\Config\ServerTreeViewItem.cs" />
-    <Compile Include="Model\Utils\LogTraceListener.cs" />
+    <Compile Include="Model\EventArg\FileTransferEventArgs.cs" />
+    <Compile Include="Model\File\ListViewRemoteEntry.cs" />
+    <Compile Include="Model\File\LocalEntry.cs" />
+    <Compile Include="Model\File\RemoteEntry.cs" />
+    <Compile Include="Model\Util\LogTraceListener.cs" />
+    <Compile Include="Model\View\FileExplorer.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Util\ConfigLoader.cs" />
     <Compile Include="View\ProtocolConfig\FtpConfig.xaml.cs">
       <DependentUpon>FtpConfig.xaml</DependentUpon>
@@ -204,6 +212,7 @@
     </Compile>
     <Compile Include="View\Explorer\HorizontalServerOnly.xaml.cs">
       <DependentUpon>HorizontalServerOnly.xaml</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="View\Explorer\VerticalServerLocal.xaml.cs">
       <DependentUpon>VerticalServerLocal.xaml</DependentUpon>
