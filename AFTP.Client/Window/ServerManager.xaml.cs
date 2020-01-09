@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AFTP.Client.Enum;
 using AFTP.Client.Model;
-using AFTP.Client.Model.Server;
+using AFTP.Client.Model.Config;
 using AFTP.Client.View.ProtocolConfig;
 using MahApps.Metro.Controls;
 
@@ -28,6 +28,7 @@ namespace AFTP.Client.Window {
         public bool Success { get; private set; }
         public int CurrentEdit = -1;
         public bool AllowEvents = false;
+        public bool Connect = false;
 
         public ServerManager(IReadOnlyCollection<ServerConfig> serverSettings) {
             InitializeComponent();
@@ -101,20 +102,9 @@ namespace AFTP.Client.Window {
             ServerName.IsEnabled = isEnabled;
             ServerGroup.IsEnabled = isEnabled;
             ServerProtocol.IsEnabled = isEnabled;
-            RenameServer.IsEnabled = isEnabled;
             DeleteServer.IsEnabled = isEnabled;
             DuplicateServer.IsEnabled = isEnabled;
             ConnectServer.IsEnabled = isEnabled;
-            /*LocalDirectory.IsEnabled = isEnabled;
-            RemoteDirectory.IsEnabled = isEnabled;
-            BrowserLocalDirectory.IsEnabled = isEnabled;
-            TransferModeActive.IsEnabled = isEnabled;
-            TranferModeDefault.IsEnabled = isEnabled;
-            TransferModePassive.IsEnabled = isEnabled;
-            LimitSimultaneousConnections.IsEnabled = isEnabled;
-            CharsetEncodingAutoDetect.IsEnabled = isEnabled;
-            CharsetEncodingASCII.IsEnabled = isEnabled;
-            CharsetEncodingUTF8.IsEnabled = isEnabled;*/
         }
 
         private void ServerTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
@@ -183,10 +173,6 @@ namespace AFTP.Client.Window {
             }
         }
 
-        private void RenameServer_Click(object sender, RoutedEventArgs e) {
-
-        }
-
         private void DeleteServer_Click(object sender, RoutedEventArgs e) {
             ServerSettings.RemoveAt(CurrentEdit);
             CurrentEdit = -1;
@@ -197,8 +183,8 @@ namespace AFTP.Client.Window {
 
         private void DuplicateServer_Click(object sender, RoutedEventArgs e) {
             var server = ServerSettings[CurrentEdit];
-            server.Name += "-Copy";
-            ServerSettings.Add(server);
+            ServerSettings.Add(ServerSettings[CurrentEdit]);
+            ServerSettings[ServerSettings.Count].Name += "-Copy";
             CurrentEdit = -1;
             ProtocolConfigFrame.Content = null;
             SetInputEnabled(false);
@@ -206,7 +192,9 @@ namespace AFTP.Client.Window {
         }
 
         private void ConnectServer_Click(object sender, RoutedEventArgs e) {
-
+            Connect = true;
+            Success = true;
+            this.Close();
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e) {

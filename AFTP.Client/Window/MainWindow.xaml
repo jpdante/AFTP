@@ -63,10 +63,15 @@
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="100*"/>
             </Grid.RowDefinitions>
-            <RichTextBox Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" IsReadOnly="True" IsUndoEnabled="False">
+            <RichTextBox x:Name="LogBox" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" IsReadOnly="True" IsUndoEnabled="False">
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
                 <FlowDocument>
                     <Paragraph>
-                        <Run Text="Test"/>
+                        <Run Text=""/>
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>

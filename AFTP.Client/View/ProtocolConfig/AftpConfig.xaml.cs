@@ -1,11 +1,11 @@
-﻿using AFTP.Client.Model.Server;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using AFTP.Client.Enum;
 using System.Windows.Forms;
+using AFTP.Client.Model.Config;
 using MessageBox = System.Windows.MessageBox;
 
 namespace AFTP.Client.View.ProtocolConfig {

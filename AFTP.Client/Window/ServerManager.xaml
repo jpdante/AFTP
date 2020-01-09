@@ -18,8 +18,7 @@
         </TreeView>-->
         <Button Content="New Server" Margin="7,0,0,97" Width="112" Height="32" VerticalAlignment="Bottom" Click="NewServer_Click" HorizontalAlignment="Left"/>
         <Button x:Name="DeleteServer" Content="Delete" Margin="7,0,0,60" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="DeleteServer_Click" HorizontalAlignment="Left"/>
-        <Button x:Name="DuplicateServer" Content="Duplicate" Margin="128,0,0,60" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="DuplicateServer_Click" HorizontalAlignment="Left"/>
-        <Button x:Name="RenameServer" Content="Rename" Margin="128,0,0,97" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="RenameServer_Click" HorizontalAlignment="Left"/>
+        <Button x:Name="DuplicateServer" Content="Duplicate" Margin="124,0,0,97" Width="112" Height="32" VerticalAlignment="Bottom" IsEnabled="False" Click="DuplicateServer_Click" HorizontalAlignment="Left"/>
         <Grid Height="55" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
             <Rectangle Fill="#0C000000" Height="2" VerticalAlignment="Top"/>
             <Button Content="Cancel" Margin="0,0,10,10" Width="112" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" IsCancel="True"/>

@@ -9,7 +9,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="444.375" d:DesignWidth="404.375"
       Title="SftpConfig" Loaded="Page_Loaded">
-
     <Grid>
         <TabControl>
             <TabItem Header="General" mah:ControlsHelper.HeaderFontSize="15">
@@ -19,21 +18,28 @@
                     <TextBox x:Name="Host" Height="26" Margin="96,10,86,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="127.0.0.1" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Host_TextChanged"/>
                     <Label Content="Port:" Margin="0,10,47,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="39"/>
                     <TextBox x:Name="Port" Height="26" Margin="0,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="21" HorizontalAlignment="Right" Width="37" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Port_TextChanged" PreviewTextInput="Port_PreviewTextInput" Text="21"/>
-                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,41,0,0"/>
-                    <Label Content="Logon Type:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="86"/>
-                    <ComboBox x:Name="LogonTypeComboBox" Margin="96,48,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="1" Background="#FF252525" BorderBrush="#89FFFFFF" Foreground="White" SelectionChanged="LogonTypeComboBox_SelectionChanged">
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,72,0,0"/>
+                    <Label Content="Logon Type:" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="86"/>
+                    <ComboBox x:Name="LogonTypeComboBox" Margin="96,79,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="1" Background="#FF252525" BorderBrush="#89FFFFFF" Foreground="White" SelectionChanged="LogonTypeComboBox_SelectionChanged">
                         <ComboBoxItem Content="Anonymous" Tag="anonymous"/>
                         <ComboBoxItem Content="Normal" Tag="normal"/>
                         <ComboBoxItem Content="Ask for password" Tag="ask-password"/>
                         <ComboBoxItem Content="Key file" Tag="key-file"/>
                     </ComboBox>
-                    <Label Content="Username:" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="86"/>
-                    <TextBox x:Name="Username" Height="26" Margin="96,79,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Root" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Username_TextChanged"/>
-                    <Label x:Name="PasswordLabel" Content="Password:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
-                    <PasswordBox x:Name="Password" Margin="96,110,10,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="Password" Foreground="{DynamicResource MaterialDesignBody}" PasswordChanged="Password_PasswordChanged" Visibility="Hidden"/>
-                    <Label x:Name="KeyFileLabel" Content="Key file:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
-                    <TextBox x:Name="KeyFile" Margin="96,110,93,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="File.pem" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="KeyFile_Changed" Visibility="Hidden"/>
-                    <Button x:Name="KeyFileButton" Content="Browse..." Margin="0,112,10,0" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="78" FontSize="10" Click="KeyFileButton_Click" Visibility="Hidden"/>
+                    <Label Content="Username:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86"/>
+                    <TextBox x:Name="Username" Height="26" Margin="96,110,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Root" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Username_TextChanged"/>
+                    <Label x:Name="PasswordLabel" Content="Password:" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
+                    <PasswordBox x:Name="Password" Margin="96,141,10,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="Password" Foreground="{DynamicResource MaterialDesignBody}" PasswordChanged="Password_PasswordChanged" Visibility="Hidden"/>
+                    <Label x:Name="KeyFileLabel" Content="Key file:" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
+                    <TextBox x:Name="KeyFile" Margin="96,141,93,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="File.pem" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="KeyFile_Changed" Visibility="Hidden"/>
+                    <Button x:Name="KeyFileButton" Content="Browse..." Margin="0,143,10,0" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="78" FontSize="10" Click="KeyFileButton_Click" Visibility="Hidden"/>
+                    <ComboBox x:Name="EncryptionComboBox" Margin="96,41,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="0" Background="#FF252525" BorderBrush="#89FFFFFF" Foreground="White" SelectionChanged="EncryptionComboBox_SelectionChanged">
+                        <ComboBoxItem Content="Use explicit FTP over TLS if available" Tag="try-explicit-tls"/>
+                        <ComboBoxItem Content="Require explicit FTP over TLS" Tag="require-explicit-tls"/>
+                        <ComboBoxItem Content="Require implicit FTP over TLS" Tag="require-implicit-tls"/>
+                        <ComboBoxItem Content="Only use plain FTP (Insecure)" Tag="plain"/>
+                    </ComboBox>
+                    <Label Content="Encryption:" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Width="86"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Advanced" mah:ControlsHelper.HeaderFontSize="15">
@@ -43,7 +49,7 @@
                     <ComboBox x:Name="ServerTypeComboBox" Margin="96,8,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="0" Background="#FF252525" BorderBrush="#89FFFFFF" Foreground="White" SelectionChanged="ServerTypeComboBox_SelectionChanged">
                         <ComboBoxItem Content="Auto Detect (Default)" Tag="default"/>
                         <ComboBoxItem Content="Unix" Tag="unix"/>
-                        <ComboBoxItem Content="VMS" Tag="vms"/>
+                        <ComboBoxItem Content="Windows" Tag="windows"/>
                     </ComboBox>
                     <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,39,0,0"/>
                     <Label Content="Default Local Directory:" Margin="10,46,10,0" VerticalAlignment="Top"/>

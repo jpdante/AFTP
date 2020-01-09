@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AFTP.Client.Model;
-using AFTP.Client.Model.Server;
+using AFTP.Client.Model.Config;
 using Newtonsoft.Json;
 
 namespace AFTP.Client.Util {

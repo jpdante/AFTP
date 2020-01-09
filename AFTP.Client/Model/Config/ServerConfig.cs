@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using AFTP.Client.Enum;
 
-namespace AFTP.Client.Model.Server {
+namespace AFTP.Client.Model.Config {
     public class ServerConfig {
         public ServerType Type;
         public string Name;

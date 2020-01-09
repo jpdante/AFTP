@@ -158,9 +158,12 @@
     </Compile>
     <Compile Include="Enum\ServerSettingsType.cs" />
     <Compile Include="Enum\ServerType.cs" />
-    <Compile Include="Model\Server\AftpClientConfig.cs" />
-    <Compile Include="Model\Server\ServerConfig.cs" />
-    <Compile Include="Model\Server\ServerTreeViewItem.cs" />
+    <Compile Include="Model\Client\BaseFtpClient.cs" />
+    <Compile Include="Model\Client\BaseClient.cs" />
+    <Compile Include="Model\Config\AftpClientConfig.cs" />
+    <Compile Include="Model\Config\ServerConfig.cs" />
+    <Compile Include="Model\Config\ServerTreeViewItem.cs" />
+    <Compile Include="Model\Utils\LogTraceListener.cs" />
     <Compile Include="Util\ConfigLoader.cs" />
     <Compile Include="View\ProtocolConfig\FtpConfig.xaml.cs">
       <DependentUpon>FtpConfig.xaml</DependentUpon>

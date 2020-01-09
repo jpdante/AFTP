@@ -1,11 +1,11 @@
-﻿using AFTP.Client.Model.Server;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using AFTP.Client.Enum;
 using System.Windows.Forms;
+using AFTP.Client.Model.Config;
 using MessageBox = System.Windows.MessageBox;
 
 namespace AFTP.Client.View.ProtocolConfig {
@@ -198,7 +198,7 @@ namespace AFTP.Client.View.ProtocolConfig {
                     case "unix":
                         ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[1];
                         break;
-                    case "vms":
+                    case "windows":
                         ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[2];
                         break;
                     default:
@@ -241,6 +241,11 @@ namespace AFTP.Client.View.ProtocolConfig {
                         DefaultModeRb.IsChecked = true;
                         break;
                 }
+            } else {
+                _serverConfig.Settings[ServerSettingsType.TransferMode] = "default";
+                ActiveModeRb.IsChecked = false;
+                PassiveModeRb.IsChecked = false;
+                DefaultModeRb.IsChecked = true;
             }
             if (_serverConfig.Settings.TryGetValue(ServerSettingsType.CharsetEncoding, out var charsetEncoding)) {
                 switch (charsetEncoding) {
@@ -285,6 +290,36 @@ namespace AFTP.Client.View.ProtocolConfig {
                         CustomEncodingTb.Text = charsetEncoding;
                         break;
                 }
+            } else {
+                _serverConfig.Settings[ServerSettingsType.CharsetEncoding] = "auto-detect";
+                AsciiRb.IsChecked = false;
+                Utf8Rb.IsChecked = false;
+                Utf16Rb.IsChecked = false;
+                CustomEncodingRb.IsChecked = false;
+                AutoDetectRb.IsChecked = true;
+                CustomEncodingTb.Text = "";
+            }
+            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Encryption, out var encryption)) {
+                switch (encryption) {
+                    case "try-explicit-tls":
+                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[0];
+                        break;
+                    case "require-explicit-tls":
+                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[1];
+                        break;
+                    case "require-implicit-tls":
+                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[2];
+                        break;
+                    case "plain":
+                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[3];
+                        break;
+                    default:
+                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[0];
+                        break;
+                }
+            } else {
+                ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[0];
+                _serverConfig.Settings[ServerSettingsType.Encryption] = ((ComboBoxItem)EncryptionComboBox.SelectedItem).Tag.ToString();
             }
         }
 
@@ -408,6 +443,11 @@ namespace AFTP.Client.View.ProtocolConfig {
         private void CustomEncodingTb_TextChanged(object sender, TextChangedEventArgs e) {
             if (_serverConfig == null) return;
             _serverConfig.Settings[ServerSettingsType.CharsetEncoding] = CustomEncodingTb.Text;
+        }
+
+        private void EncryptionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (_serverConfig == null) return;
+            _serverConfig.Settings[ServerSettingsType.Encryption] = ((ComboBoxItem)EncryptionComboBox.SelectedItem).Tag.ToString();
         }
     }
 }
