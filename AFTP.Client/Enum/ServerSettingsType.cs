@@ -3,13 +3,14 @@
         Username,
         Password,
         Encryption,
-        AccessKey,
-        SecreteKey,
         DefaultLocalDirectory,
         DefaultRemoteDirectory,
         TransferMode,
         LimitSimultaneousConnections,
-        MaximunConnections,
-        CharsetEncoding
+        MaxConnections,
+        CharsetEncoding,
+        LogonType,
+        KeyFile,
+        ServerType,
     }
 }

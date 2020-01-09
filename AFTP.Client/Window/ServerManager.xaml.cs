@@ -137,9 +137,6 @@ namespace AFTP.Client.Window {
                     case ServerType.Sftp:
                         ProtocolConfigFrame.Content = new SftpConfig(server);
                         break;
-                    case ServerType.Smb:
-                        ProtocolConfigFrame.Content = new SmbConfig(server);
-                        break;
                     default:
                         break;
                 }
@@ -180,10 +177,6 @@ namespace AFTP.Client.Window {
                 case 2:
                     ServerSettings[CurrentEdit].Type = ServerType.Sftp;
                     ProtocolConfigFrame.Content = new SftpConfig(ServerSettings[CurrentEdit]);
-                    break;
-                case 3:
-                    ServerSettings[CurrentEdit].Type = ServerType.Smb;
-                    ProtocolConfigFrame.Content = new SmbConfig(ServerSettings[CurrentEdit]);
                     break;
                 default:
                     break;

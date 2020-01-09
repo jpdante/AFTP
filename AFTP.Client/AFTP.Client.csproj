@@ -110,6 +110,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -131,19 +132,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="View\ProtocolConfig\AftpConfig.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\ProtocolConfig\FtpConfig.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProtocolConfig\AftpConfig.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ProtocolConfig\SftpConfig.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\ProtocolConfig\SmbConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -165,17 +162,14 @@
     <Compile Include="Model\Server\ServerConfig.cs" />
     <Compile Include="Model\Server\ServerTreeViewItem.cs" />
     <Compile Include="Util\ConfigLoader.cs" />
-    <Compile Include="View\ProtocolConfig\AftpConfig.xaml.cs">
-      <DependentUpon>AftpConfig.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\ProtocolConfig\FtpConfig.xaml.cs">
       <DependentUpon>FtpConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ProtocolConfig\AftpConfig.xaml.cs">
+      <DependentUpon>AftpConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProtocolConfig\SftpConfig.xaml.cs">
       <DependentUpon>SftpConfig.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ProtocolConfig\SmbConfig.xaml.cs">
-      <DependentUpon>SmbConfig.xaml</DependentUpon>
     </Compile>
     <Compile Include="Window\ServerManager.xaml.cs">
       <DependentUpon>ServerManager.xaml</DependentUpon>

@@ -2,7 +2,6 @@
     public enum ServerType {
         Aftp,
         Ftp,
-        Sftp,
-        Smb
+        Sftp
     }
 }

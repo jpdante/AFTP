@@ -3,22 +3,77 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:AFTP.Client.View.Explorer"
+      xmlns:local="clr-namespace:AFTP.Client.View.ProtocolConfig"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
-      d:DesignHeight="452.807" d:DesignWidth="416.424"
-      Title="AftpConfig" Loaded="Page_Loaded">
+      d:DesignHeight="444.375" d:DesignWidth="404.375"
+      Title="SftpConfig" Loaded="Page_Loaded">
+
     <Grid>
-        <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,3,0,0"/>
-        <Label Content="Host:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="86"/>
-        <TextBox x:Name="Host" Height="26" Margin="96,10,86,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="127.0.0.1" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Host_TextChanged"/>
-        <Label Content="Port:" Margin="0,10,47,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="39"/>
-        <TextBox x:Name="Port" Height="26" Margin="0,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="21" HorizontalAlignment="Right" Width="37" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Port_TextChanged" MaxLength="5" PreviewTextInput="Port_PreviewTextInput"/>
-        <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,47,0,0"/>
-        <Label Content="Username:" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Width="86"/>
-        <TextBox x:Name="Username" Height="26" Margin="96,54,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Root" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Username_TextChanged"/>
-        <Label Content="Password:" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="86"/>
-        <PasswordBox x:Name="Password" Margin="96,85,10,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="Password" Foreground="{DynamicResource MaterialDesignBody}" PasswordChanged="Password_PasswordChanged"/>
-        <CheckBox x:Name="AnonymousLogin" Content="Anonymous Login" HorizontalAlignment="Left" Margin="10,116,0,0" VerticalAlignment="Top" Unchecked="AnonymousLogin_Unchecked" Checked="AnonymousLogin_Checked" Foreground="{DynamicResource MaterialDesignBody}"/>
+        <TabControl>
+            <TabItem Header="General" mah:ControlsHelper.HeaderFontSize="15">
+                <Grid>
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,3,0,0"/>
+                    <Label Content="Host:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="86"/>
+                    <TextBox x:Name="Host" Height="26" Margin="96,10,86,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="127.0.0.1" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Host_TextChanged"/>
+                    <Label Content="Port:" Margin="0,10,47,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="39"/>
+                    <TextBox x:Name="Port" Height="26" Margin="0,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="21" HorizontalAlignment="Right" Width="37" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Port_TextChanged" PreviewTextInput="Port_PreviewTextInput" Text="21"/>
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,41,0,0"/>
+                    <Label Content="Logon Type:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="86"/>
+                    <ComboBox x:Name="LogonTypeComboBox" Margin="96,48,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="1" Background="#FF252525" BorderBrush="#89FFFFFF" Foreground="White" SelectionChanged="LogonTypeComboBox_SelectionChanged">
+                        <ComboBoxItem Content="Anonymous" Tag="anonymous"/>
+                        <ComboBoxItem Content="Normal" Tag="normal"/>
+                        <ComboBoxItem Content="Ask for password" Tag="ask-password"/>
+                        <ComboBoxItem Content="Key file" Tag="key-file"/>
+                    </ComboBox>
+                    <Label Content="Username:" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="86"/>
+                    <TextBox x:Name="Username" Height="26" Margin="96,79,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Root" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Username_TextChanged"/>
+                    <Label x:Name="PasswordLabel" Content="Password:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
+                    <PasswordBox x:Name="Password" Margin="96,110,10,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="Password" Foreground="{DynamicResource MaterialDesignBody}" PasswordChanged="Password_PasswordChanged" Visibility="Hidden"/>
+                    <Label x:Name="KeyFileLabel" Content="Key file:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
+                    <TextBox x:Name="KeyFile" Margin="96,110,93,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="File.pem" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="KeyFile_Changed" Visibility="Hidden"/>
+                    <Button x:Name="KeyFileButton" Content="Browse..." Margin="0,112,10,0" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="78" FontSize="10" Click="KeyFileButton_Click" Visibility="Hidden"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Advanced" mah:ControlsHelper.HeaderFontSize="15">
+                <Grid>
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,3,0,0"/>
+                    <Label Content="Server Type:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="86"/>
+                    <ComboBox x:Name="ServerTypeComboBox" Margin="96,8,10,0" VerticalAlignment="Top" Height="26" SelectedIndex="0" Background="#FF252525" BorderBrush="#89FFFFFF" Foreground="White" SelectionChanged="ServerTypeComboBox_SelectionChanged">
+                        <ComboBoxItem Content="Auto Detect (Default)" Tag="default"/>
+                        <ComboBoxItem Content="Unix" Tag="unix"/>
+                        <ComboBoxItem Content="VMS" Tag="vms"/>
+                    </ComboBox>
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,39,0,0"/>
+                    <Label Content="Default Local Directory:" Margin="10,46,10,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="DefaultLocalDirectory" Margin="10,70,93,0" VerticalAlignment="Top" Height="26" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="DefaultLocalDirectory_Changed"/>
+                    <Button x:Name="DefaultLocalDirectoryButton" Content="Browse..." Margin="0,72,10,0" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="78" FontSize="10" Click="DefaultLocalDirectoryButton_Click"/>
+                    <Label Content="Default Remote Directory:" Margin="10,101,10,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="DefaultRemoteDirectory" Margin="10,130,10,0" VerticalAlignment="Top" Height="26" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="DefaultRemoteDirectory_Changed"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Transfer Settings" mah:ControlsHelper.HeaderFontSize="15">
+                <Grid>
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,3,0,0"/>
+                    <CheckBox x:Name="LimitSimultaneousConnectionsCb" Content="Limit number of simultaneous connections" Margin="10,10,10,0" VerticalAlignment="Top" Checked="LimitSimultaneousConnectionsCb_Checked" Unchecked="LimitSimultaneousConnectionsCb_Unchecked"/>
+                    <Slider x:Name="MaxNumberOfConnectionsSlider" Margin="32,33,52,0" Maximum="30" SmallChange="1" TickPlacement="BottomRight" Value="1" Minimum="1" IsEnabled="False" ValueChanged="MaxNumberOfConnectionsSlider_ValueChanged" Height="26" VerticalAlignment="Top"/>
+                    <TextBox x:Name="MaxNumberOfConnections" Height="26" Margin="0,33,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="21" HorizontalAlignment="Right" Width="37" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="MaxNumberOfConnections_TextChanged" PreviewTextInput="Port_PreviewTextInput" Text="1" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Charset" mah:ControlsHelper.HeaderFontSize="15">
+                <Grid>
+                    <Rectangle Fill="#19000000" Height="2" VerticalAlignment="Top" Margin="0,3,0,0"/>
+                    <Label Content="Server Charset:" Margin="10,10,10,0" VerticalAlignment="Top"/>
+                    <RadioButton x:Name="AutoDetectRb" Content="Auto Detect" Margin="10,39,10,0" IsChecked="True" GroupName="Charset" Height="18" VerticalAlignment="Top" Checked="AutoDetectRb_Checked"/>
+                    <RadioButton x:Name="AsciiRb" Content="ASCII" Margin="10,62,10,0" GroupName="Charset" Height="18" VerticalAlignment="Top" Checked="AsciiRb_Checked"/>
+                    <RadioButton x:Name="Utf8Rb" Content="UTF-8" Margin="10,85,10,0" GroupName="Charset" Height="18" VerticalAlignment="Top" Checked="Utf8Rb_Checked"/>
+                    <RadioButton x:Name="Utf16Rb" Content="UTF-16" Margin="10,108,10,0" GroupName="Charset" Height="18" VerticalAlignment="Top" Checked="Utf16Rb_Checked"/>
+                    <RadioButton x:Name="CustomEncodingRb" Content="Custom encoding" Margin="10,131,10,0" GroupName="Charset" Height="18" VerticalAlignment="Top" Checked="CustomEncodingRb_Checked"/>
+                    <Label x:Name="CustomEncodingLabel" Content="Encoding:" HorizontalAlignment="Left" Margin="10,156,0,0" VerticalAlignment="Top" Width="62" IsEnabled="False"/>
+                    <TextBox x:Name="CustomEncodingTb" Margin="72,154,10,0" VerticalAlignment="Top" Height="26" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="CustomEncodingTb_TextChanged" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Page>
