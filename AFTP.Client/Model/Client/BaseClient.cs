@@ -16,8 +16,8 @@ namespace AFTP.Client.Model.Client {
         public delegate void ConnectedHandler(object sender);
         public delegate void DisconnectedHandler(object sender);
 
-        public event ConnectedHandler OnConnected;
-        public event DisconnectedHandler OnDisconnected;
+        public abstract event ConnectedHandler OnConnected;
+        public abstract event DisconnectedHandler OnDisconnected;
 
         public abstract bool IsConnected { get; }
 
@@ -36,9 +36,6 @@ namespace AFTP.Client.Model.Client {
         public abstract Task<bool> MoveFile(string path, string dest, bool overwrite, CancellationToken cancellationToken);
         public abstract Task<bool> DownloadFileAsync(string localPath, string remotePath, bool overwrite, CancellationToken cancellationToken);
         public abstract void Dispose(bool disposing);
-
-        protected void TriggerOnConnected() => OnConnected?.Invoke(this);
-        protected void TriggerOnDisconnected() => OnDisconnected?.Invoke(this);
 
         public void Dispose() { Dispose(true); }
     }

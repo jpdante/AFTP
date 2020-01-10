@@ -1,16 +1,71 @@
-﻿<Page x:Class="AFTP.Client.View.Explorer.HorizontalServerOnly"
+﻿<view:FileExplorer
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AFTP.Client.View.Explorer"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:File="clr-namespace:AFTP.Client.Model.File"
+      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:view="clr-namespace:AFTP.Client.Model.View"
+      xmlns:util="clr-namespace:AFTP.Client.Model.Util"
+      x:Class="AFTP.Client.View.Explorer.HorizontalServerOnly"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="HorizontalServerOnly">
     <Page.Resources>
-        <Style x:Key="ListViewStyle" TargetType="{x:Type ListViewItem}">
+        <util:ImageConverter x:Key="Conv"/>
+        <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
             <EventSetter Event="MouseDoubleClick" Handler="HandleDoubleClick" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Border"
+                            Padding="{Binding RelativeSource={RelativeSource Self}, Path=(materialDesign:ListViewAssist.ListViewItemPadding)}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{DynamicResource MaterialDesignDivider}"
+                            BorderThickness="0,0,0,1"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                            <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignTextBoxBorder}" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsSelected" Value="True" />
+                        <Condition Property="Selector.IsSelectionActive" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsSelected" Value="True" />
+                        <Condition Property="Selector.IsSelectionActive" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
+                </MultiTrigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Opacity" Value=".56" />
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Page.Resources>
     <Grid>
@@ -20,28 +75,54 @@
             <ColumnDefinition Width="399*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
-            <TextBox Height="28" Margin="10,21,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Remote path" Foreground="White"/>
-            <TreeView Grid.Column="0" Margin="0,49,0,0" Background="{x:Null}">
-                <TreeViewItem Header="Cocaina">
-                    <TreeViewItem Header="Deuterio"/>
-                    <TreeViewItem Header="Gasolina"/>
-                    <TreeViewItem Header="Farinha"/>
-                    <TreeViewItem Header="Jabuticaba"/>
-                </TreeViewItem>
+            <TextBox x:Name="RemotePathBox" Height="28" Margin="10,21,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Remote path" Foreground="White" KeyDown="RemotePathBox_KeyDown" />
+            <TreeView x:Name="RemoteTreeView" Grid.Column="0" Margin="0,49,0,0" Background="{x:Null}">
             </TreeView>
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
-        <ListView x:Name="RemoteListView" Grid.Column="2" Background="{x:Null}" ItemContainerStyle="{StaticResource ListViewStyle}">
+        <ListView x:Name="RemoteListView" Grid.Column="2" Background="{x:Null}" ItemContainerStyle="{StaticResource ListViewItemStyle}" IsSynchronizedWithCurrentItem="True">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="200" Header="FileName" DisplayMemberBinding="{Binding FileName}"/>
-                    <GridViewColumn Width="70" Header="Size" DisplayMemberBinding="{Binding Size}"/>
-                    <GridViewColumn Width="70" Header="Type" DisplayMemberBinding="{Binding Type}"/>
-                    <GridViewColumn Width="145" Header="Modified" DisplayMemberBinding="{Binding Modified}"/>
-                    <GridViewColumn Width="102" Header="Permissions" DisplayMemberBinding="{Binding Permissions}"/>
-                    <GridViewColumn Width="75" Header="Owner" DisplayMemberBinding="{Binding Owner}"/>
+                    <GridViewColumn Width="200">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="FileName" Click="RemoteListColumnHeader_Click">FileName</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="20" Height="20" Source="{Binding Path=Icon, Converter={StaticResource Conv}}"/>
+                                    <TextBlock Text="{Binding FileName}" Margin="5,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="70" DisplayMemberBinding="{Binding Size}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Size" Click="RemoteListColumnHeader_Click">Size</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="70" DisplayMemberBinding="{Binding Type}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Type" Click="RemoteListColumnHeader_Click">Type</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="145" DisplayMemberBinding="{Binding Modified}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Modified" Click="RemoteListColumnHeader_Click">Modified</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="102" DisplayMemberBinding="{Binding Permissions}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Permissions" Click="RemoteListColumnHeader_Click">Permissions</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="75" DisplayMemberBinding="{Binding Owner}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Owner" Click="RemoteListColumnHeader_Click">Owner</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
     </Grid>
-</Page>
+</view:FileExplorer>

@@ -23,9 +23,9 @@ namespace AFTP.Client.Window {
     public partial class MainWindow : MetroWindow {
         private readonly ConfigLoader _configLoader;
         private readonly AftpClientConfig _config;
+        private FileExplorer _currentFileExplorer;
         private BaseClient _currentClient;
         private ServerConfig _currentServerConfig;
-        private FileExplorer _currentFileExplorer;
 
         public MainWindow() {
             InitializeComponent();
@@ -38,6 +38,19 @@ namespace AFTP.Client.Window {
             Frame.Content = _currentFileExplorer;
             LogTraceListener.OnWrite += this.LogTraceListener_OnWrite;
             LogTraceListener.OnWriteLine += this.LogTraceListener_OnWriteLine;
+            _currentFileExplorer.OnGoToLocalPath += this._currentFileExplorer_OnGoToLocalPath;
+            _currentFileExplorer.OnGoToRemotePath += CurrentFileExplorerOnOnGoToRemotePath;
+        }
+
+        private async void CurrentFileExplorerOnOnGoToRemotePath(object sender, string path) {
+            if (_currentClient == null || !_currentClient.IsConnected) return;
+            _currentFileExplorer.UpdateRemotePath(path);
+            var remoteEntries = await _currentClient.ListDirectory(path, CancellationToken.None);
+            _currentFileExplorer.UpdateRemoteEntries(remoteEntries);
+        }
+
+        private void _currentFileExplorer_OnGoToLocalPath(object sender, string path) {
+            
         }
 
         private void LogTraceListener_OnWriteLine(object sender, string data) {
@@ -105,6 +118,7 @@ namespace AFTP.Client.Window {
             if (string.IsNullOrEmpty(path)) {
                 path = "/";
             }
+            _currentFileExplorer.UpdateRemotePath(path);
             var remoteEntries = await _currentClient.ListDirectory(path, CancellationToken.None);
             _currentFileExplorer.UpdateRemoteEntries(remoteEntries);
         }

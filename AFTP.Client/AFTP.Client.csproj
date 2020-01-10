@@ -69,6 +69,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
       <Private>True</Private>
@@ -168,10 +169,10 @@
     <Compile Include="Model\File\ListViewRemoteEntry.cs" />
     <Compile Include="Model\File\LocalEntry.cs" />
     <Compile Include="Model\File\RemoteEntry.cs" />
+    <Compile Include="Model\Util\ImageConverter.cs" />
     <Compile Include="Model\Util\LogTraceListener.cs" />
-    <Compile Include="Model\View\FileExplorer.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="Model\Util\SortAdorner.cs" />
+    <Compile Include="Model\View\FileExplorer.cs" />
     <Compile Include="Util\ConfigLoader.cs" />
     <Compile Include="View\ProtocolConfig\FtpConfig.xaml.cs">
       <DependentUpon>FtpConfig.xaml</DependentUpon>
@@ -212,7 +213,6 @@
     </Compile>
     <Compile Include="View\Explorer\HorizontalServerOnly.xaml.cs">
       <DependentUpon>HorizontalServerOnly.xaml</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="View\Explorer\VerticalServerLocal.xaml.cs">
       <DependentUpon>VerticalServerLocal.xaml</DependentUpon>
@@ -246,7 +246,84 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\118-folder-23.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\026-file-65.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\219-mkv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\051-pdf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\043-flv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\040-gif-1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\033-mkv-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\023-pdf-1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\019-psd-1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\009-swf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\210-php.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\206-doc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\185-html.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\183-zip-file.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\152-gif.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\150-ai.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\146-cdr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\121-iso.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\115-png.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\078-txt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\077-xls.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\070-psd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\067-jpg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\060-css.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\052-doc-3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\132-file-35.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

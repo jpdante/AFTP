@@ -29,6 +29,9 @@ namespace AFTP.Client.Model.Client {
 
         private void FtpClientOnValidateCertificate(FtpClient control, FtpSslValidationEventArgs e) { e.Accept = e.PolicyErrors == System.Net.Security.SslPolicyErrors.None; }
 
+        public override event ConnectedHandler OnConnected;
+        public override event DisconnectedHandler OnDisconnected;
+
         public override bool IsConnected => _ftpClient.IsConnected;
 
         public override void Configure(Dictionary<ServerSettingsType, string> settings) {
@@ -93,12 +96,12 @@ namespace AFTP.Client.Model.Client {
 
         public override async Task Connect() {
             await _ftpClient.ConnectAsync();
-            TriggerOnConnected();
+            OnConnected?.Invoke(this);
         }
 
         public override async Task Disconnect() {
             await _ftpClient.DisconnectAsync();
-            TriggerOnDisconnected();
+            OnDisconnected?.Invoke(this);
         }
 
         public override async Task<bool> UploadFile(string localPath, string remotePath, bool overwrite, bool createFolder, CancellationToken cancellationToken) {
