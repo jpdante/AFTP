@@ -169,6 +169,7 @@
     <Compile Include="Model\File\ListViewRemoteEntry.cs" />
     <Compile Include="Model\File\LocalEntry.cs" />
     <Compile Include="Model\File\RemoteEntry.cs" />
+    <Compile Include="Model\File\TreeViewEntry.cs" />
     <Compile Include="Model\Util\ImageConverter.cs" />
     <Compile Include="Model\Util\LogTraceListener.cs" />
     <Compile Include="Model\Util\SortAdorner.cs" />
