@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +41,7 @@ namespace AFTP.Client.Model.File {
                     Icon = Properties.Resources.Link;
                     break;
                 default:
-                    Icon = Properties.Resources.File;
+                    Icon = GetExtensionBitmap(FileName);
                     break;
             }
             Size = remoteEntry.Type != RemoteEntryType.File ? "" : remoteEntry.Size.ToString();
@@ -49,6 +50,49 @@ namespace AFTP.Client.Model.File {
             Permissions = "";
             Owner = "";
             IsBack = false;
+        }
+
+        private static Bitmap GetExtensionBitmap(string fileName) {
+            switch (Path.GetExtension(fileName)?.ToLower()) {
+                case ".png":
+                    return Properties.Resources.FilePNG;
+                case ".ai":
+                    return Properties.Resources.FileAI;
+                case ".cdr":
+                    return Properties.Resources.FileCDR;
+                case ".css":
+                    return Properties.Resources.FileCSS;
+                case ".doc":
+                    return Properties.Resources.FileDoc;
+                case ".flv":
+                    return Properties.Resources.FileFLV;
+                case ".gif":
+                    return Properties.Resources.FileGIF;
+                case ".html":
+                    return Properties.Resources.FileHTML;
+                case ".iso":
+                    return Properties.Resources.FileISO;
+                case ".jpg":
+                    return Properties.Resources.FileJPG;
+                case ".mkv":
+                    return Properties.Resources.FileMKV;
+                case ".pdf":
+                    return Properties.Resources.FilePDF;
+                case ".psd":
+                    return Properties.Resources.FilePSD;
+                case ".swf":
+                    return Properties.Resources.FileSWF;
+                case ".txt":
+                    return Properties.Resources.FileTXT;
+                case ".xls":
+                    return Properties.Resources.FileXLS;
+                case ".zip":
+                    return Properties.Resources.FileZIP;
+                case ".php":
+                    return Properties.Resources.FilePHP;
+                default:
+                    return Properties.Resources.File;
+            }
         }
     }
 }

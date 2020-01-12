@@ -162,6 +162,7 @@
     <Compile Include="Enum\ServerType.cs" />
     <Compile Include="Model\Client\BaseFtpClient.cs" />
     <Compile Include="Model\Client\BaseClient.cs" />
+    <Compile Include="Model\Client\BaseSFtp.cs" />
     <Compile Include="Model\Config\AftpClientConfig.cs" />
     <Compile Include="Model\Config\ServerConfig.cs" />
     <Compile Include="Model\Config\ServerTreeViewItem.cs" />
