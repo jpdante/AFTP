@@ -277,6 +277,30 @@
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
         <ListView x:Name="RemoteListView" Grid.Column="2" Background="{x:Null}" ItemContainerStyle="{StaticResource ListViewItemStyle}" IsSynchronizedWithCurrentItem="True">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Download">
+                        <MenuItem.Icon>
+                            <Image Source="/AFTP.Client;component/Images/DownloadIcon.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Upload">
+                        <MenuItem.Icon>
+                            <Image Source="/AFTP.Client;component/Images/UploadIcon.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="View/Edit"/>
+                    <Separator/>
+                    <MenuItem Header="Create directory"/>
+                    <MenuItem Header="Create directory and enter it"/>
+                    <MenuItem Header="Create new file"/>
+                    <MenuItem Header="Refresh"/>
+                    <Separator/>
+                    <MenuItem Header="Delete"/>
+                    <MenuItem Header="Rename"/>
+                    <MenuItem Header="Copy path"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="200">
