@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
@@ -27,7 +28,7 @@ namespace AFTP.Client.View.Explorer {
         public override event GoToRemotePathHandler OnGoToRemotePath;
         public override event GoToLocalPathHandler OnGoToLocalPath;
 
-        private string _currentRemotePath;
+        public override string CurrentRemotePath { get; set; }
         private GridViewColumnHeader _listViewSortCol = null;
         private SortAdorner _listViewSortAdorner = null;
         private readonly TreeViewEntry _defaultTreeViewItem;
@@ -40,7 +41,7 @@ namespace AFTP.Client.View.Explorer {
         }
 
         public override void UpdateRemotePath(string path) {
-            _currentRemotePath = path;
+            CurrentRemotePath = path;
             this.RemotePathBox.Dispatcher?.Invoke(DispatcherPriority.Normal, new Action(() => {
                 RemotePathBox.Text = path;
             }));
@@ -87,7 +88,7 @@ namespace AFTP.Client.View.Explorer {
                     LoadDirectories(entry.FullName, _defaultTreeViewItem);
                 }
                 _allowSelectEvent = false;
-                SelectDirectory(_currentRemotePath, _defaultTreeViewItem);
+                SelectDirectory(CurrentRemotePath, _defaultTreeViewItem);
                 _allowSelectEvent = true;
             }));
         }
@@ -99,9 +100,11 @@ namespace AFTP.Client.View.Explorer {
         private void HandleDoubleClick(object sender, MouseButtonEventArgs e) {
             if (!(((ListViewItem)sender).Content is ListViewRemoteEntry listViewRemoteEntry)) return;
             if (listViewRemoteEntry.IsBack) {
-                OnGoToRemotePath?.Invoke(this, GetParentDirPath(_currentRemotePath));
+                OnGoToRemotePath?.Invoke(this, GetParentDirPath(CurrentRemotePath));
             } else {
                 if (listViewRemoteEntry.RemoteEntry.Type == RemoteEntryType.Directory) {
+                    RemoteListView.Items.Clear();
+                    CollectionViewSource.GetDefaultView(RemoteListView.Items).Refresh();
                     OnGoToRemotePath?.Invoke(this, listViewRemoteEntry.RemoteEntry.FullName);
                 }
             }
@@ -109,6 +112,8 @@ namespace AFTP.Client.View.Explorer {
 
         private void RemotePathBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
             if (e.Key != Key.Return) return;
+            RemoteListView.Items.Clear();
+            CollectionViewSource.GetDefaultView(RemoteListView.Items).Refresh();
             OnGoToRemotePath?.Invoke(this, RemotePathBox.Text);
         }
 
@@ -139,6 +144,8 @@ namespace AFTP.Client.View.Explorer {
         private void RemoteTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
             if (!_allowSelectEvent) return;
             if (!(RemoteTreeView.SelectedItem is TreeViewEntry item)) return;
+            RemoteListView.Items.Clear();
+            CollectionViewSource.GetDefaultView(RemoteListView.Items).Refresh();
             if (string.IsNullOrEmpty(item.Path)) OnGoToRemotePath?.Invoke(this, "/");
             else OnGoToRemotePath?.Invoke(this, item.Path);
         }

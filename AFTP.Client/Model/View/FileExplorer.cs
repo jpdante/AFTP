@@ -9,6 +9,8 @@ using AFTP.Client.Model.View;
 namespace AFTP.Client.Model.View {
     public abstract class FileExplorer : Page {
 
+        public abstract string CurrentRemotePath { get; set; }
+
         public delegate void GoToRemotePathHandler(object sender, string path);
         public delegate void GoToLocalPathHandler(object sender, string path);
 

@@ -33,7 +33,7 @@ namespace AFTP.Client.Window {
             if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
             var configPath = System.IO.Path.Combine(folder, "config.json");
             _configLoader = new ConfigLoader(configPath);
-            _config = _configLoader.LoadConfig();
+            _config = _configLoader.LoadConfig() ?? new AftpClientConfig();
             _currentFileExplorer = new HorizontalServerOnly();
             Frame.Content = _currentFileExplorer;
             LogTraceListener.OnWrite += this.LogTraceListener_OnWrite;
@@ -110,10 +110,11 @@ namespace AFTP.Client.Window {
         }
 
         private void CurrentClientOnOnDisconnected(object sender) {
-
+            RefreshMenuButton.IsEnabled = false;
         }
 
         private async void CurrentClientOnOnConnected(object sender) {
+            RefreshMenuButton.IsEnabled = true;
             _currentServerConfig.Settings.TryGetValue(ServerSettingsType.DefaultRemoteDirectory, out var path);
             if (string.IsNullOrEmpty(path)) {
                 path = "/";
