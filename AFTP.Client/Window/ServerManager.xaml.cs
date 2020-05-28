@@ -33,6 +33,27 @@ namespace AFTP.Client.Window {
         public ServerManager(IReadOnlyCollection<ServerConfig> serverSettings) {
             InitializeComponent();
             ServerSettings = serverSettings.ToList();
+            if (ServerSettings.Count <= 0) return;
+            var server = ServerSettings[0];
+            CurrentEdit = ServerSettings.IndexOf(server);
+            ServerName.Text = server.Name;
+            ServerGroup.Text = server.Group;
+            ServerProtocol.SelectedIndex = (int)server.Type;
+            switch (server.Type) {
+                case ServerType.Aftp:
+                    ProtocolConfigFrame.Content = new AftpConfig(server);
+                    break;
+                case ServerType.Ftp:
+                    ProtocolConfigFrame.Content = new FtpConfig(server);
+                    break;
+                case ServerType.Sftp:
+                    ProtocolConfigFrame.Content = new SftpConfig(server);
+                    break;
+                default:
+                    break;
+            }
+
+            SetInputEnabled(true);
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e) {

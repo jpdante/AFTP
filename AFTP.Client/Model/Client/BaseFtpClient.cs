@@ -5,10 +5,12 @@ using System.Security.Authentication;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using AFTP.Client.Enum;
 using AFTP.Client.Model.File;
 using AFTP.Client.Model.Util;
 using FluentFTP;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace AFTP.Client.Model.Client {
     public class BaseFtpClient : BaseClient {
@@ -35,7 +37,7 @@ namespace AFTP.Client.Model.Client {
         public override bool IsConnected => _ftpClient.IsConnected;
 
         public override void Configure(Dictionary<ServerSettingsType, string> settings) {
-            if (settings.TryGetValue(ServerSettingsType.TransferMode, out var transferMode)) {
+            if (settings.TryGetValue(ServerSettingsType.TransferMode, out string transferMode)) {
                 switch (transferMode) {
                     case "default":
                         _ftpClient.DataConnectionType = FtpDataConnectionType.AutoActive;
@@ -51,40 +53,37 @@ namespace AFTP.Client.Model.Client {
                         break;
                 }
             }
-            if (settings.TryGetValue(ServerSettingsType.CharsetEncoding, out var charsetEncoding)) {
+            if (settings.TryGetValue(ServerSettingsType.CharsetEncoding, out string charsetEncoding)) {
                 switch (charsetEncoding) {
-                    case "default":
-                        //_ftpClient.Encoding = Encoding.ASCII;
+                    case "auto-detect":
                         break;
                     default:
                         _ftpClient.Encoding = Encoding.GetEncoding(charsetEncoding);
                         break;
                 }
             }
-            if (settings.TryGetValue(ServerSettingsType.Encryption, out var encryption)) {
+            if (settings.TryGetValue(ServerSettingsType.Encryption, out string encryption)) {
                 switch (encryption) {
                     case "try-explicit-tls":
                         _ftpClient.EncryptionMode = FtpEncryptionMode.Explicit;
-                        _ftpClient.SslProtocols = SslProtocols.Tls;
+                        _ftpClient.SslProtocols = SslProtocols.Tls | SslProtocols.None;// | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Ssl2 | SslProtocols.Ssl3 | SslProtocols.None;
                         break;
                     case "require-explicit-tls":
                         _ftpClient.EncryptionMode = FtpEncryptionMode.Explicit;
-                        _ftpClient.SslProtocols = SslProtocols.Tls;
+                        _ftpClient.SslProtocols = SslProtocols.Tls;// | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Ssl2 | SslProtocols.Ssl3 | SslProtocols.None;
                         break;
                     case "require-implicit-tls":
                         _ftpClient.EncryptionMode = FtpEncryptionMode.Implicit;
-                        _ftpClient.SslProtocols = SslProtocols.Tls;
+                        _ftpClient.SslProtocols = SslProtocols.Tls;// | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Ssl2 | SslProtocols.Ssl3;
                         break;
                     case "plain":
                         _ftpClient.EncryptionMode = FtpEncryptionMode.None;
                         _ftpClient.SslProtocols = SslProtocols.None;
                         break;
                     default:
-                        _ftpClient.EncryptionMode = FtpEncryptionMode.None;
+                        _ftpClient.EncryptionMode = FtpEncryptionMode.Explicit;
+                        _ftpClient.SslProtocols = SslProtocols.Tls;//| SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Ssl2 | SslProtocols.Ssl3 | SslProtocols.None;
                         break;
-                    /*default:
-                        _ftpClient.Encoding = Encoding.GetEncoding(charsetEncoding);
-                        break;*/
                 }
             }
             _ftpClient.ConnectTimeout = 5000;

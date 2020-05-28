@@ -48,8 +48,8 @@ namespace AFTP.Client.View.ProtocolConfig {
                 case "normal":
                     Username.IsEnabled = true;
                     Password.IsEnabled = true;
-                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username)) Username.Text = username;
-                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out var password)) Password.Password = password;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out string username)) Username.Text = username;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out string password)) Password.Password = password;
                     Password.Visibility = Visibility.Visible;
                     PasswordLabel.Visibility = Visibility.Visible;
                     KeyFile.Visibility = Visibility.Hidden;
@@ -59,7 +59,7 @@ namespace AFTP.Client.View.ProtocolConfig {
                 case "ask-password":
                     Username.IsEnabled = true;
                     Password.IsEnabled = false;
-                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username2)) Username.Text = username2;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out string username2)) Username.Text = username2;
                     Password.Password = "";
                     Password.Visibility = Visibility.Visible;
                     PasswordLabel.Visibility = Visibility.Visible;
@@ -70,7 +70,7 @@ namespace AFTP.Client.View.ProtocolConfig {
                 case "key-file":
                     Username.IsEnabled = true;
                     Password.IsEnabled = false;
-                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username3)) Username.Text = username3;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out string username3)) Username.Text = username3;
                     Password.Password = "";
                     Password.Visibility = Visibility.Hidden;
                     PasswordLabel.Visibility = Visibility.Hidden;
@@ -95,7 +95,7 @@ namespace AFTP.Client.View.ProtocolConfig {
 
         private void Port_TextChanged(object sender, TextChangedEventArgs e) {
             if (Port.Text.Length == 0) return;
-            var port = int.Parse(Port.Text);
+            int port = int.Parse(Port.Text);
             if (port <= 0) Port.Text = "1";
             if (port > 65535) Port.Text = "65535";
             if (_serverConfig == null) return;
@@ -205,6 +205,9 @@ namespace AFTP.Client.View.ProtocolConfig {
                         ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[0];
                         break;
                 }
+            } else {
+                ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[0];
+                _serverConfig.Settings[ServerSettingsType.ServerType] = ((ComboBoxItem)ServerTypeComboBox.SelectedItem).Tag.ToString();
             }
             if (_serverConfig.Settings.TryGetValue(ServerSettingsType.DefaultLocalDirectory, out var defaultLocalDirectory)) {
                 DefaultLocalDirectory.Text = defaultLocalDirectory;
@@ -247,7 +250,7 @@ namespace AFTP.Client.View.ProtocolConfig {
                 PassiveModeRb.IsChecked = false;
                 DefaultModeRb.IsChecked = true;
             }
-            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.CharsetEncoding, out var charsetEncoding)) {
+            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.CharsetEncoding, out string charsetEncoding)) {
                 switch (charsetEncoding) {
                     case "auto-detect":
                         AsciiRb.IsChecked = false;
@@ -299,26 +302,26 @@ namespace AFTP.Client.View.ProtocolConfig {
                 AutoDetectRb.IsChecked = true;
                 CustomEncodingTb.Text = "";
             }
-            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Encryption, out var encryption)) {
+            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Encryption, out string encryption)) {
                 switch (encryption) {
                     case "try-explicit-tls":
-                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[0];
+                        EncryptionComboBox.SelectedItem = EncryptionComboBox.Items[0];
                         break;
                     case "require-explicit-tls":
-                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[1];
+                        EncryptionComboBox.SelectedItem = EncryptionComboBox.Items[1];
                         break;
                     case "require-implicit-tls":
-                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[2];
+                        EncryptionComboBox.SelectedItem = EncryptionComboBox.Items[2];
                         break;
                     case "plain":
-                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[3];
+                        EncryptionComboBox.SelectedItem = EncryptionComboBox.Items[3];
                         break;
                     default:
-                        ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[0];
+                        EncryptionComboBox.SelectedItem = EncryptionComboBox.Items[0];
                         break;
                 }
             } else {
-                ServerTypeComboBox.SelectedItem = ServerTypeComboBox.Items[0];
+                EncryptionComboBox.SelectedItem = EncryptionComboBox.Items[0];
                 _serverConfig.Settings[ServerSettingsType.Encryption] = ((ComboBoxItem)EncryptionComboBox.SelectedItem).Tag.ToString();
             }
         }

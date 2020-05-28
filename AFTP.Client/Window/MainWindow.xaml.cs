@@ -100,6 +100,7 @@ namespace AFTP.Client.Window {
                 }
                 _currentServerConfig = server;
                 BindEvents();
+                _currentClient?.Configure(server.Settings);
                 _currentClient?.Connect();
             }
         }
