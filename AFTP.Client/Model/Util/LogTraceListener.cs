@@ -9,8 +9,7 @@ namespace AFTP.Client.Model.Util {
         public delegate void WriteLineHandler(object sender, string data);
         public static event WriteLineHandler OnWriteLine;
 
-        public override void Write(string message) { OnWrite?.Invoke(this, message);
-        }
+        public override void Write(string message) { OnWrite?.Invoke(this, message); }
 
         public override void WriteLine(string message) { OnWriteLine?.Invoke(this, message); }
     }

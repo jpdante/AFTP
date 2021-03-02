@@ -15,6 +15,7 @@ namespace AFTP.Client.View.ProtocolConfig {
     public partial class SftpConfig : Page {
         private readonly ServerConfig _serverConfig;
         private static readonly Regex PortRegex = new Regex("[^0-9]+");
+        private readonly bool _ignoreUpdate;
 
         public SftpConfig(ServerConfig server) {
             InitializeComponent();
@@ -33,6 +34,8 @@ namespace AFTP.Client.View.ProtocolConfig {
 
         private void LogonTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (_serverConfig == null) return;
+            string username = null;
+            string password = null;
             switch (((ComboBoxItem)LogonTypeComboBox.SelectedItem).Tag.ToString()) {
                 case "anonymous":
                     Username.IsEnabled = false;
@@ -48,8 +51,8 @@ namespace AFTP.Client.View.ProtocolConfig {
                 case "normal":
                     Username.IsEnabled = true;
                     Password.IsEnabled = true;
-                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username)) Username.Text = username;
-                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out var password)) Password.Password = password;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out username)) Username.Text = username;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out password)) Password.Password = password;
                     Password.Visibility = Visibility.Visible;
                     PasswordLabel.Visibility = Visibility.Visible;
                     KeyFile.Visibility = Visibility.Hidden;
@@ -59,7 +62,7 @@ namespace AFTP.Client.View.ProtocolConfig {
                 case "ask-password":
                     Username.IsEnabled = true;
                     Password.IsEnabled = false;
-                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username2)) Username.Text = username2;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out username)) Username.Text = username;
                     Password.Password = "";
                     Password.Visibility = Visibility.Visible;
                     PasswordLabel.Visibility = Visibility.Visible;
@@ -69,11 +72,11 @@ namespace AFTP.Client.View.ProtocolConfig {
                     break;
                 case "key-file":
                     Username.IsEnabled = true;
-                    Password.IsEnabled = false;
-                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username3)) Username.Text = username3;
-                    Password.Password = "";
-                    Password.Visibility = Visibility.Hidden;
-                    PasswordLabel.Visibility = Visibility.Hidden;
+                    Password.IsEnabled = true;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out username)) Username.Text = username;
+                    if (_serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out password)) Password.Password = password;
+                    Password.Visibility = Visibility.Visible;
+                    PasswordLabel.Visibility = Visibility.Visible;
                     KeyFile.Visibility = Visibility.Visible;
                     KeyFileButton.Visibility = Visibility.Visible;
                     KeyFileLabel.Visibility = Visibility.Visible;
@@ -113,9 +116,9 @@ namespace AFTP.Client.View.ProtocolConfig {
 
         private void Page_Loaded(object sender, RoutedEventArgs e) {
             if (_serverConfig == null) return;
-            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.LogonType, out var logonTypeRaw) &&
-                _serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username) &&
-                _serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out var password)) {
+            if (_serverConfig.Settings.TryGetValue(ServerSettingsType.LogonType, out string logonTypeRaw) &&
+                _serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out string username) &&
+                _serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out string password)) {
                 switch (logonTypeRaw) {
                     case "anonymous":
                         Username.IsEnabled = false;
@@ -157,8 +160,8 @@ namespace AFTP.Client.View.ProtocolConfig {
                         Username.IsEnabled = true;
                         Password.IsEnabled = false;
                         Username.Text = username;
-                        Password.Password = "";
-                        if (_serverConfig.Settings.TryGetValue(ServerSettingsType.KeyFile, out var keyFile)) KeyFile.Text = keyFile;
+                        Password.Password = password;
+                        if (_serverConfig.Settings.TryGetValue(ServerSettingsType.KeyFile, out string keyFile)) KeyFile.Text = keyFile;
                         Password.Visibility = Visibility.Hidden;
                         PasswordLabel.Visibility = Visibility.Hidden;
                         KeyFile.Visibility = Visibility.Visible;

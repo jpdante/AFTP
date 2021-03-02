@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +30,10 @@ namespace AFTP.Client.Model.Client {
             _ftpClient.ValidateCertificate += FtpClientOnValidateCertificate;
         }
 
-        private void FtpClientOnValidateCertificate(FtpClient control, FtpSslValidationEventArgs e) { e.Accept = e.PolicyErrors == System.Net.Security.SslPolicyErrors.None; }
+        private void FtpClientOnValidateCertificate(FtpClient control, FtpSslValidationEventArgs e) {
+            new LogTraceListener().WriteLine($"Certificate: {e.PolicyErrors}");
+            e.Accept = e.PolicyErrors == System.Net.Security.SslPolicyErrors.None;
+        }
 
         public override event ConnectedHandler OnConnected;
         public override event DisconnectedHandler OnDisconnected;
@@ -66,7 +70,7 @@ namespace AFTP.Client.Model.Client {
                 switch (encryption) {
                     case "try-explicit-tls":
                         _ftpClient.EncryptionMode = FtpEncryptionMode.Explicit;
-                        _ftpClient.SslProtocols = SslProtocols.Tls | SslProtocols.None;// | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Ssl2 | SslProtocols.Ssl3 | SslProtocols.None;
+                        _ftpClient.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Ssl2 | SslProtocols.Ssl3 | SslProtocols.None;
                         break;
                     case "require-explicit-tls":
                         _ftpClient.EncryptionMode = FtpEncryptionMode.Explicit;

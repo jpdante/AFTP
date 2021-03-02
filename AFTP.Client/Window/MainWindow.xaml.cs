@@ -72,36 +72,69 @@ namespace AFTP.Client.Window {
             serverManager.ShowDialog();
             _config.Servers = serverManager.ServerSettings;
             _configLoader.SaveConfig(_config);
-            if (serverManager.Connect) {
-                var server = _config.Servers[serverManager.CurrentEdit];
-                switch (server.Type) {
-                    case ServerType.Aftp:
+            if (!serverManager.Connect) return;
+            var server = _config.Servers[serverManager.CurrentEdit];
+            switch (server.Type) {
+                case ServerType.Aftp:
+                    SetupAFtp(server);
+                    break;
+                case ServerType.Ftp:
+                    SetupFtp(server);
+                    break;
+                case ServerType.Sftp:
+                    SetupSFtp(server);
+                    break;
+            }
+            _currentServerConfig = server;
+            BindEvents();
+            _currentClient?.Configure(server.Settings);
+            _currentClient?.Connect();
+        }
+
+        
+        private void SetupAFtp(ServerConfig serverConfig) {
+        }
+
+        private void SetupFtp(ServerConfig serverConfig) {
+            if (serverConfig.Settings.TryGetValue(ServerSettingsType.LogonType, out var logonType)) {
+                switch (logonType) {
+                    case "ask-password":
+                        // TODO: Ask for password
                         break;
-                    case ServerType.Ftp:
-                        if (server.Settings.TryGetValue(ServerSettingsType.LogonType, out var logonType)) {
-                            switch (logonType) {
-                                case "ask-password":
-                                    // TODO: Ask for password
-                                    break;
-                                case "key-file":
-                                    // TODO: Load from certificate
-                                    break;
-                                default:
-                                    if (server.Settings.TryGetValue(ServerSettingsType.Username, out var username) &&
-                                        server.Settings.TryGetValue(ServerSettingsType.Password, out var password)) {
-                                        _currentClient = new BaseFtpClient(server.Host, server.Port, username, password);
-                                    }
-                                    break;
-                            }
+                    case "key-file":
+                        // TODO: Load from certificate
+                        break;
+                    default:
+                        if (serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out var username) &&
+                            serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out var password)) {
+                            _currentClient = new BaseFtpClient(serverConfig.Host, serverConfig.Port, username, password);
                         }
                         break;
-                    case ServerType.Sftp:
-                        break;
                 }
-                _currentServerConfig = server;
-                BindEvents();
-                _currentClient?.Configure(server.Settings);
-                _currentClient?.Connect();
+            }
+        }
+
+        private void SetupSFtp(ServerConfig serverConfig) {
+            if (!serverConfig.Settings.TryGetValue(ServerSettingsType.LogonType, out string logonType)) return;
+            string username = null;
+            string password = null;
+            switch (logonType) {
+                case "ask-password":
+                    // TODO: Ask for password
+                    break;
+                case "key-file":
+                    if (serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out username) &&
+                        serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out password) &&
+                        serverConfig.Settings.TryGetValue(ServerSettingsType.KeyFile, out var keyFile)) {
+                        _currentClient = new BaseSFtpClient(serverConfig.Host, serverConfig.Port, username, keyFile, password);
+                    }
+                    break;
+                default:
+                    if (serverConfig.Settings.TryGetValue(ServerSettingsType.Username, out username) &&
+                        serverConfig.Settings.TryGetValue(ServerSettingsType.Password, out password)) {
+                        _currentClient = new BaseSFtpClient(serverConfig.Host, serverConfig.Port, username, password);
+                    }
+                    break;
             }
         }
 

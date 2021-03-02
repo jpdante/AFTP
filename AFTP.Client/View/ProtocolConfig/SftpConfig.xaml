@@ -31,9 +31,9 @@
                     <TextBox x:Name="Username" Height="26" Margin="96,79,10,0" TextWrapping="Wrap" VerticalAlignment="Top" materialDesign:HintAssist.Hint="Root" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="Username_TextChanged"/>
                     <Label x:Name="PasswordLabel" Content="Password:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
                     <PasswordBox x:Name="Password" Margin="96,110,10,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="Password" Foreground="{DynamicResource MaterialDesignBody}" PasswordChanged="Password_PasswordChanged" Visibility="Hidden"/>
-                    <Label x:Name="KeyFileLabel" Content="Key file:" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
-                    <TextBox x:Name="KeyFile" Margin="96,110,93,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="File.pem" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="KeyFile_Changed" Visibility="Hidden"/>
-                    <Button x:Name="KeyFileButton" Content="Browse..." Margin="0,112,10,0" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="78" FontSize="10" Click="KeyFileButton_Click" Visibility="Hidden"/>
+                    <Label x:Name="KeyFileLabel" Content="Key file:" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Width="86" Visibility="Hidden"/>
+                    <TextBox x:Name="KeyFile" Margin="96,139,93,0" VerticalAlignment="Top" Height="26" materialDesign:HintAssist.Hint="File.pem" Foreground="{DynamicResource MaterialDesignBody}" TextChanged="KeyFile_Changed" Visibility="Hidden"/>
+                    <Button x:Name="KeyFileButton" Content="Browse..." Margin="0,141,10,0" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="78" FontSize="10" Click="KeyFileButton_Click" Visibility="Hidden"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Advanced" mah:ControlsHelper.HeaderFontSize="15">
